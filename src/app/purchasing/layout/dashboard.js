@@ -40,8 +40,8 @@ const menuData = [
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false); // Add this line to open the sidebar
   return (
-    <div className="flex flex-col w-full h-full p-4">
-      <div className="flex flex-row gap-8 p-8 mb-8">
+    <div className="flex flex-col w-full h-full p-12">
+      <div className="flex flex-row gap-8 mb-8">
         <Button
           icon={<GiHamburgerMenu />}
           variant="primary"
@@ -51,19 +51,21 @@ export default function Dashboard() {
         <Input placeholder={"Search"} />
       </div>
       <div className="flex flex-row justify-center">
-        <div className="grid grid-cols-4 gap-12">
-          {menuData.map((menu) => (
-            <MenuCard
-              key={menu.id}
-              image={menu.image}
-              name={menu.name}
-              stock={menu.stock}
-              price={menu.price}
-            />
-          ))}
+        <div className="flex flex-row justify-between">
+          <div className="grid grid-cols-4 gap-[40px]">
+            {menuData.map((menu) => (
+              <MenuCard
+                key={menu.id}
+                image={menu.image}
+                name={menu.name}
+                stock={menu.stock}
+                price={menu.price}
+              />
+            ))}
+          </div>
         </div>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />} 
+      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }
