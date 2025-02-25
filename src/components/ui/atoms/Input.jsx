@@ -1,4 +1,4 @@
-export const Input = ({ label, name, value, onChange, type = "text" }) => {
+export const Input = ({ label, name, value, onChange, type = "text", placeholder }) => {
   return (
     <div className="flex flex-col">
       {label && <label htmlFor={name} className="mb-1 text-sm font-medium">{label}</label>}
@@ -7,6 +7,7 @@ export const Input = ({ label, name, value, onChange, type = "text" }) => {
         name={name}
         type={type}
         value={value}
+        placeholder={placeholder}
         onChange={onChange} // Pastikan onChange diteruskan
         className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
       />

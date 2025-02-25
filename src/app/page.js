@@ -1,4 +1,3 @@
-import { H1 } from "@/components/ui/atoms/Text";
 import { LoginForm } from "@/components/ui/molecules/Modal/Login";
 import { Modal } from "@/components/ui/organism/Modal";
 

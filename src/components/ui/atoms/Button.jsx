@@ -14,7 +14,8 @@ export const Button = ({
       onClick={onClick}
       className={cn(
         "px-4 py-2 rounded-full font-medium transition-all flex items-center justify-center gap-2",
-        variant === "primary" && "bg-[#3B694E] text-[#F3F4F8] hover:bg-green-800",
+        variant === "primary" &&
+          "bg-[#3B694E] text-[#F3F4F8] hover:bg-green-800",
         variant === "secondary" &&
           "bg-yellow-300 text-black hover:bg-yellow-400",
         variant === "outline" &&
@@ -33,17 +34,17 @@ export const ChangeQuantity = ({ className }) => {
 
   return (
     <div
-      className={`flex items-center bg-yellow-300 rounded-full ${className}`}
+      className={`flex items-center justify-start w-fit bg-green-800 text-white rounded-full px-2 py-1 ${className}`}
     >
       <button
-        className="px-4 py-2 text-2xl font-bold"
+        className="px-4 py-2 text-sm font-bold"
         onClick={() => setCount((prev) => Math.max(0, prev - 1))}
       >
         −
       </button>
-      <span className="px-4 text-lg font-semibold">{count}</span>
+      <span className="px-2 text-sm font-semibold">{count}</span>
       <button
-        className="px-4 py-2 text-2xl font-bold"
+        className="px-4 py-2 text-sm font-bold"
         onClick={() => setCount((prev) => prev + 1)}
       >
         +
