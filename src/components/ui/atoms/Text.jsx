@@ -38,7 +38,7 @@ export const H6 = ({ children, className }) => (
 );
 
 export const P = ({ children, className }) => (
-  <p className={cn("text-base leading-relaxed", className)}>
+  <p className={cn("text-[16px] font-bold text-[#3B694E]", className)}>
     {children}
   </p>
 );

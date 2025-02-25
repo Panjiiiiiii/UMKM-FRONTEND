@@ -44,3 +44,25 @@ export const Checkbox = ({ label, checked, onChange }) => {
     </label>
   );
 };
+
+// components/atoms/DateInput.js
+export const DateInput = ({ label, name, value, onChange, placeholder }) => {
+  return (
+    <div className="flex flex-col">
+      {label && (
+        <label htmlFor={name} className="mb-1 text-sm font-medium text-green-800">
+          {label}
+        </label>
+      )}
+      <input
+        id={name}
+        name={name}
+        type="date"
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        className="border border-green-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800 text-green-800"
+      />
+    </div>
+  );
+};
