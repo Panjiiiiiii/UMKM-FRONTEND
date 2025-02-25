@@ -1,8 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/atoms/Button";
 import { Input } from "@/components/ui/atoms/Input";
 import { MenuCard } from "@/components/ui/molecules/Card";
 import { GiHamburgerMenu } from "react-icons/gi";
-
+import { useState } from "react";
+import { Sidebar } from "lucide-react";
+import SidebarOverlay from "../components/navbar";
 const menuData = [
   {
     id: 1,
@@ -35,18 +38,20 @@ const menuData = [
 ];
 
 export default function Dashboard() {
+  const [isOpen, setIsOpen] = useState(false); // Add this line to open the sidebar
   return (
-    <div className="flex flex-col justify center p-4">
-      <div className="flex flex-row gap-4 justify-start">
+    <div className="flex flex-col w-full h-full p-4">
+      <div className="flex flex-row gap-8 p-8 mb-8">
         <Button
           icon={<GiHamburgerMenu />}
           variant="primary"
           className={`rounded-md p-4`}
+          onClick={() => setIsOpen(true)} // Add this line to open the sidebar
         />
-        <Input placeholder={"S"} />
+        <Input placeholder={"Search"} />
       </div>
-      <div className="flex flex-col justify-center items-center">
-        <div className="grid grid-cols-4 p-12 gap-8">
+      <div className="flex flex-row justify-center">
+        <div className="grid grid-cols-4 gap-12">
           {menuData.map((menu) => (
             <MenuCard
               key={menu.id}
@@ -58,6 +63,7 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />} 
     </div>
   );
 }
