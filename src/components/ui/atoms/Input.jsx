@@ -24,10 +24,10 @@ export const Checkbox = ({ label, checked, onChange }) => {
         onChange={onChange}
         className="hidden peer" // Peer untuk styling
       />
-      <div className="w-4 h-4 border-2 border-gray-500 rounded-md flex items-center justify-center peer-checked:border-green-800 peer-checked:bg-green-800 transition">
+      <div className="w-4 h-4 border-2 border-gray-500 rounded-sm flex items-center justify-center peer-checked:border-green-800 peer-checked:bg-green-800 transition">
         {checked && (
           <svg
-            className="w-2 h-2 text-white"
+            className="w-4 h-4 text-white"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
