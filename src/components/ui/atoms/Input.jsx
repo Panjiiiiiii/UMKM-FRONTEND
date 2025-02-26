@@ -16,7 +16,7 @@ export const Input = ({ label, name, value, onChange, type = "text", placeholder
 };
 
 // components/atoms/Checkbox.js
-export const Checkbox = ({ label, checked, onChange }) => {
+export const Checkbox = ({ label, checked, value, onChange }) => {
   return (
     <label className="flex items-center space-x-2 cursor-pointer">
       <input
