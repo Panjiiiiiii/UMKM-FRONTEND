@@ -65,7 +65,7 @@ export default function Bahan() {
           </div>
           <div className="flex flex-col gap-8 justify-between">
             <H4>Produk yang menggunakan bahan</H4>
-            <div className="grid grid-cols-5 gap-">
+            <div className="grid grid-cols-5 gap-8">
               {produk.map((produk) => (
                 <Checkbox
                   value={produk.id_produk}
