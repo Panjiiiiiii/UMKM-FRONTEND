@@ -5,7 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import SidebarOverlay from "../components/navbar";
 import { H2, H4 } from "@/components/ui/atoms/Text";
-import { EnumInput, Input, NumberInput } from "@/components/ui/atoms/Input";
+import { EnumInput, Input, NumberInput, TextBox } from "@/components/ui/atoms/Input";
 import { Send } from "lucide-react";
 
 export default function Produk() {
@@ -47,9 +47,13 @@ export default function Produk() {
             <H4>Harga</H4>
             <NumberInput placeholder={`Masukkan harga`} />
           </div>
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between mb-8">
             <H4>Stok</H4>
             <ChangeQuantity />
+          </div>
+          <div className="flex flex-col gap-8 justify-between">
+            <H4>Link Foto (URL)</H4>
+            <TextBox/>
           </div>
         </form>
       </div>

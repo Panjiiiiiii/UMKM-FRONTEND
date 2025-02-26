@@ -107,3 +107,19 @@ export const EnumInput = ({ label, name, value, onChange, options }) => {
   );
 };
 
+
+export const TextBox = ({ label, name, value, onChange, placeholder }) => {
+  return (
+    <div className="flex flex-col">
+      {label && <label htmlFor={name} className="mb-1 text-sm font-medium">{label}</label>}
+      <textarea
+        id={name}
+        name={name}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
+      />
+    </div>
+  );
+};
