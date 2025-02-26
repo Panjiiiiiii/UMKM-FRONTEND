@@ -53,7 +53,7 @@ export default function Produk() {
           </div>
           <div className="flex flex-col gap-8 justify-between">
             <H4>Link Foto (URL)</H4>
-            <TextBox/>
+            <TextBox placeholder={`Masukkan link foto`}/>
           </div>
         </form>
       </div>
