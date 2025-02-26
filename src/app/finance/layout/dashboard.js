@@ -5,17 +5,17 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
-import { Filter } from "lucide-react";
+import { Filter, TrendingUp } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { Input } from "@/components/ui/atoms/Input";
 
-export default function History() {
+export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
   const toggleSort = () => setSortAsc(!sortAsc);
-  
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
@@ -55,7 +55,7 @@ export default function History() {
       name: "Doni Prasetyo",
       phone: "084567890123",
       date: "2025-02-19",
-      total:  3200000,
+      total: 3200000,
       status: "Dibatalkan",
     },
     {
@@ -65,10 +65,13 @@ export default function History() {
       date: "2025-02-21",
       total: 1100000,
       status: "Selesai",
-    },  ];
+    },
+  ];
 
   const sortedTransactions = transactions.sort((a, b) => {
-    return sortAsc ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+    return sortAsc
+      ? new Date(a.date) - new Date(b.date)
+      : new Date(b.date) - new Date(a.date);
   });
 
   return (
@@ -81,8 +84,35 @@ export default function History() {
           onClick={() => setIsOpen(true)}
         />
       </div>
-      <H2 className={`mb-4`}>Histori Pembelian</H2>
-      <div className="flex flex-row justify-end items-center gap-12 mb-8">
+      <div className="flex flex-row justify-between gap-32 mb-8">
+        <div className="flex flex-col w-full rounded-lg shadow-lg p-8">
+          <P className={`text-gray-300`}>Total Transaksi</P>
+          <H2 className={`text-green-800`}>20 Transaksi</H2>
+          <span className="flex flex-row items-center gap-2 text-green-800 bg-[#A2D7B8] w-28 p-1 rounded-2xl border-2 border-[#208C4D]">
+            <TrendingUp className={`text-green-800`} />
+            20%
+          </span>
+        </div>
+        <div className="flex flex-col w-full rounded-lg shadow-lg p-8">
+          <P className={`text-gray-300`}>Total Transaksi</P>
+          <H2 className={`text-green-800`}>20 Transaksi</H2>
+          <span className="flex flex-row items-center gap-2 text-green-800 bg-[#A2D7B8] w-28 p-1 rounded-2xl border-2 border-[#208C4D]">
+            <TrendingUp className={`text-green-800`} />
+            20%
+          </span>
+        </div>
+        <div className="flex flex-col w-full rounded-lg shadow-lg p-8">
+          <P className={`text-gray-300`}>Total Transaksi</P>
+          <H2 className={`text-green-800`}>20 Transaksi</H2>
+          <span className="flex flex-row items-center gap-2 text-green-800 bg-[#A2D7B8] w-28 p-1 rounded-2xl border-2 border-[#208C4D]">
+            <TrendingUp className={`text-green-800`} />
+            20%
+          </span>
+        </div>
+      </div>
+      <H2 className={`mb-4`}>Transaksi Terbaru</H2>
+      <div className="flex flex-row justify-start items-center gap-12 mb-8">
+        <Input placeholder={`Search`} />
         <Button icon={<Filter />} variant="primary" children={`Filter`} />
         <DateRangeFilter
           startDate={startDate}
@@ -98,7 +128,12 @@ export default function History() {
               <th className="p-4">Nama Pelanggan</th>
               <th className="p-4">Nomor Telepon</th>
               <th className="p-4 cursor-pointer" onClick={toggleSort}>
-                Tanggal Transaksi {sortAsc ? <ArrowUp className="inline" /> : <ArrowDown className="inline" />}
+                Tanggal Transaksi{" "}
+                {sortAsc ? (
+                  <ArrowUp className="inline" />
+                ) : (
+                  <ArrowDown className="inline" />
+                )}
               </th>
               <th className="p-4">Total Harga</th>
               <th className="p-4">Status</th>
@@ -106,12 +141,25 @@ export default function History() {
           </thead>
           <tbody>
             {sortedTransactions.map((transaction) => (
-              <tr key={transaction.id} className="border border-gray-300 text-center">
-                <td className="p-4"><P>{transaction.name}</P></td>
-                <td className="p-4"><P>{transaction.phone}</P></td>
-                <td className="p-4"><P>{transaction.date}</P></td>
-                <td className="p-4"><P>{transaction.total}</P></td>
-                <td className="p-4"><P>Rp. {transaction.total.toLocaleString("id-ID")}</P></td>
+              <tr
+                key={transaction.id}
+                className="border border-gray-300 text-center"
+              >
+                <td className="p-4">
+                  <P>{transaction.name}</P>
+                </td>
+                <td className="p-4">
+                  <P>{transaction.phone}</P>
+                </td>
+                <td className="p-4">
+                  <P>{transaction.date}</P>
+                </td>
+                <td className="p-4">
+                  <P>Rp. {transaction.total.toLocaleString("id-ID")}</P>
+                </td>
+                <td className="p-4">
+                  <P>{transaction.status}</P>
+                </td>
               </tr>
             ))}
           </tbody>
