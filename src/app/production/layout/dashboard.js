@@ -9,8 +9,17 @@ import { Filter } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function History() {
+export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
 
   // Data Dummy
   const cakes = [
@@ -55,19 +64,19 @@ export default function History() {
           onClick={() => setIsOpen(true)}
         />
       </div>
-      <H2 className={`mb-4`}>Produk</H2>
+      <H2 className={`mb-4`}>Bahan</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`}/>
-        <Button variant="primary" children={`Tambah produk`} />
+        <Button variant="primary" children={`Tambah bahan`} />
       </div>
       <div>
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-green-800 text-white">
             <tr>
-              <th className="p-4">Nama Produk</th>
-              <th className="p-4">Kategori</th>
-              <th className="p-4">Stok</th>
-              <th className="p-4">Harga</th>
+              <th className="p-4">Nama Bahan</th>
+              <th className="p-4">Qty</th>
+              <th className="p-4">Satuan</th>
+              <th className="p-4">Action</th>
             </tr>
           </thead>
           <tbody>

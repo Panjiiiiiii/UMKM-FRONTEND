@@ -3,13 +3,13 @@ import User from "./layout/user";
 import Produk from "./layout/produk";
 
 
-export default function purchasingPage({}) {
+export default function Page({}) {
   return (
     <>
     <div className="w-screen h-screen overflow-x-hidden">
       {/* <Dashboard /> */}
       {/* <User/> */}
-      <Produk/>
+      {/* <Produk/> */}
     </div>
     </>
   );
