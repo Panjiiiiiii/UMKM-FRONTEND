@@ -66,3 +66,44 @@ export const DateInput = ({ label, name, value, onChange, placeholder }) => {
     </div>
   );
 };
+
+// NumberInput component
+export const NumberInput = ({ label, name, value, onChange, placeholder }) => {
+  return (
+    <div className="flex flex-col">
+      {label && <label htmlFor={name} className="mb-1 text-sm font-medium">{label}</label>}
+      <input
+        id={name}
+        name={name}
+        type="number"
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
+      />
+    </div>
+  );
+};
+
+// EnumInput component
+export const EnumInput = ({ label, name, value, onChange, options }) => {
+  return (
+    <div className="flex flex-col">
+      {label && <label htmlFor={name} className="mb-1 text-sm font-medium">{label}</label>}
+      <select
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
