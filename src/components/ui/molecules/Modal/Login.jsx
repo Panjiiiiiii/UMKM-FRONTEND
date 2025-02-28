@@ -1,20 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "../../atoms/Input";
 import { Button } from "../../atoms/Button";
 import { Checkbox } from "../../atoms/Input";
+import login from "@/auth/handler"; // Import login handler
 
 export const LoginForm = ({ onSubmit }) => {
   const [form, setForm] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter(); // Use useRouter to navigate
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async () => {
+    const result = await login(form.username, form.password, router);
+    if (result) {
+      onSubmit(result);
+    }
   };
 
   return (
@@ -37,7 +46,7 @@ export const LoginForm = ({ onSubmit }) => {
         checked={showPassword}
         onChange={toggleShowPassword}
       />
-      <Button variant="primary" onClick={() => onSubmit(form)} fullWidth>
+      <Button variant="primary" onClick={handleSubmit} fullWidth>
         Login
       </Button>
     </div>
