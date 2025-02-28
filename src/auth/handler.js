@@ -15,11 +15,10 @@ export default async function login(username, password, router) {
       return data.message;
     }
 
-    
     const { token, user } = data.data;
     const { role } = user;
     setCookie("token", token);
-    
+
     if (role === "ADMIN") {
       router.push("/admin");
     } else if (role === "PRODUCTION") {

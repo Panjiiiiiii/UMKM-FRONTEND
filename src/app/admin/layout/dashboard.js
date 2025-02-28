@@ -9,7 +9,7 @@ import { Filter } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function History() {
+export default function Dashboard({setActiveLayout}) {
   const [isOpen, setIsOpen] = useState(false);
 
   // Data Dummy
@@ -47,18 +47,10 @@ export default function History() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Produk</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`}/>
-        <Button variant="primary" children={`Tambah produk`} />
+        <Button variant="primary" children={`Tambah produk`} onClick={() => setActiveLayout("produk")}/>
       </div>
       <div>
         <table className="w-full border-collapse border border-gray-300">

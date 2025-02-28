@@ -51,14 +51,6 @@ export default function User() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Data user</H2>
       <div className="flex flex-row justify-end items-center gap-12 mb-8">
         <Button icon={<User2 />} variant="primary" children={`Register`} />
