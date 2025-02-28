@@ -1,15 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
-import { Filter } from "lucide-react";
-import { DateRangeFilter } from "@/components/ui/molecules/Date";
+import { Edit, Trash } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function Dashboard({setActiveLayout}) {
+export default function Dashboard({ setActiveLayout }) {
   const [isOpen, setIsOpen] = useState(false);
 
   // Data Dummy
@@ -49,8 +47,18 @@ export default function Dashboard({setActiveLayout}) {
     <div className="flex flex-col w-full h-full p-8">
       <H2 className={`mb-4`}>Produk</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
-        <Input placeholder={`Search`}/>
-        <Button variant="primary" children={`Tambah produk`} onClick={() => setActiveLayout("produk")}/>
+        <Input placeholder={`Search`} />
+        <div className="flex flex-row gap-4">
+          <Button
+            variant="primary"
+            children={`Tambah produk`}
+            onClick={() => setActiveLayout("produk")}
+          />
+          <Button
+            variant="primary"
+            children={`Tambah kategori`}
+          />
+        </div>
       </div>
       <div>
         <table className="w-full border-collapse border border-gray-300">
@@ -60,6 +68,7 @@ export default function Dashboard({setActiveLayout}) {
               <th className="p-4">Kategori</th>
               <th className="p-4">Stok</th>
               <th className="p-4">Harga</th>
+              <th className="p-4">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -76,6 +85,10 @@ export default function Dashboard({setActiveLayout}) {
                 </td>
                 <td className="p-4">
                   <P>{`Rp ${cake.price.toLocaleString("id-ID")}`}</P>
+                </td>
+                <td className="p-4 flex flex-row gap-4 justify-center">
+                  <Button variant="outline" icon={<Edit/>} />
+                  <Button variant="outline" icon={<Trash/>} />
                 </td>
               </tr>
             ))}
