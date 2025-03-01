@@ -2,10 +2,23 @@
 
 import { X, User } from "lucide-react";
 import { Button } from "@/components/ui/atoms/Button";
+import { removeCookie } from "@/utils/cookies";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-export default function SidebarOverlay({ isOpen, setIsOpen, setActiveLayout, activeLayout }) {
+export default function SidebarOverlay({
+  isOpen,
+  setIsOpen,
+  setActiveLayout,
+  activeLayout,
+}) {
   if (!isOpen) return null;
-
+  // const router = useRouter();
+  // const handlerLogOut = () => {
+  //   removeCookie("token");
+  //   toast.success("Logout berhasil")
+  //   router.push("/");
+  // };
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 z-50"
@@ -64,9 +77,9 @@ export default function SidebarOverlay({ isOpen, setIsOpen, setActiveLayout, act
             <Button
               variant="outline"
               className="w-full flex items-center gap-2 border-green-800 text-green-800"
-            >
-              <User className="w-5 h-5" /> Logout
-            </Button>
+              icon={<User />}
+              children={`Logout`}
+            />
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import User from "./layout/user";
 import Produk from "./layout/produk";
 import { Button } from "@/components/ui/atoms/Button";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Toaster } from "react-hot-toast";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function Page() {
 
   return (
     <div className="w-screen h-screen overflow-x-hidden p-4">
+      <Toaster position="top-right"/>
       <header className="fixed p-8 z-50">
         <Button
           icon={<GiHamburgerMenu />}

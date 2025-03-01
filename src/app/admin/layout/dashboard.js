@@ -10,48 +10,18 @@ import { getProduk } from "../handler/produk";
 
 export default function Dashboard({ setActiveLayout }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [cakes, setCakes] = useState([]);
+  const [cakes, setCake] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getProduk();
       console.log(response);
+      setCake(response.data);
     }
     fetchData(); 
   }, []);
 
   // Data Dummy
-  const kue = [
-    {
-      id: 1,
-      product: "Kue Lapis",
-      category: "Kue Basah",
-      stock: 15,
-      price: 50000,
-    },
-    {
-      id: 2,
-      product: "Brownies",
-      category: "Kue Kering",
-      stock: 10,
-      price: 75000,
-    },
-    { id: 3, product: "Donat", category: "Roti", stock: 20, price: 30000 },
-    {
-      id: 4,
-      product: "Tart Coklat",
-      category: "Kue Ulang Tahun",
-      stock: 5,
-      price: 50000,
-    },
-    {
-      id: 5,
-      product: "Cheesecake",
-      category: "Dessert",
-      stock: 8,
-      price: 120000,
-    },
-  ];
 
   return (
     <div className="flex flex-col w-full h-full p-8">
@@ -83,18 +53,18 @@ export default function Dashboard({ setActiveLayout }) {
           </thead>
           <tbody>
             {cakes.map((cake) => (
-              <tr key={cake.id} className="border border-gray-300 text-center">
+              <tr key={cake.id_produk} className="border border-gray-300 text-center">
                 <td className="p-4">
-                  <P>{cake.product}</P>
+                  <P>{cake.nama}</P>
                 </td>
                 <td className="p-4">
-                  <P>{cake.category}</P>
+                  <P>{cake.Kategori.Kategori}</P>
                 </td>
                 <td className="p-4">
-                  <P>{cake.stock}</P>
+                  <P>{cake.stok}</P>
                 </td>
                 <td className="p-4">
-                  <P>{`Rp ${cake.price.toLocaleString("id-ID")}`}</P>
+                  <P>{`Rp ${cake.harga}`}</P>
                 </td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
                   <Button variant="outline" icon={<Edit/>} />
