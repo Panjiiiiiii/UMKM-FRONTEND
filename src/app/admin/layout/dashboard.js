@@ -2,11 +2,10 @@
 
 import { Button } from "@/components/ui/atoms/Button";
 import { useEffect, useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Edit, Trash } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
-import { getProduk, getProdukById } from "../handler/produk";
+import { getProduk, getProdukById, deleteProduk } from "../handler/produk";
 import toast from "react-hot-toast";
 
 export default function Dashboard({ setActiveLayout, setEditProduct }) {
@@ -31,14 +30,31 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
     }
   };
 
+  const handleDelete = async (id_produk) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus produk ini?")) return;
+
+    const result = await deleteProduk(id_produk);
+    if (result) {
+      toast.success("Produk berhasil dihapus!");
+      setCake((prevCakes) =>
+        prevCakes.filter((cake) => cake.id_produk !== id_produk)
+      );
+    } else {
+      toast.error("Gagal menghapus produk");
+    }
+  };
+
   return (
     <div className="flex flex-col w-full h-full p-8">
       <H2 className={`mb-4`}>Produk</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`} />
         <div className="flex flex-row gap-4">
-          <Button variant="primary" children={`Tambah produk`} onClick={() => setActiveLayout("produk")} />
-          <Button variant="primary" children={`Tambah kategori`} />
+          <Button
+            variant="primary"
+            children={`Tambah produk`}
+            onClick={() => setActiveLayout("produk")}
+          />
         </div>
       </div>
       <div>
@@ -54,14 +70,33 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
           </thead>
           <tbody>
             {cakes.map((cake) => (
-              <tr key={cake.id_produk} className="border border-gray-300 text-center">
-                <td className="p-4"><P>{cake.nama}</P></td>
-                <td className="p-4"><P>{cake.Kategori.Kategori}</P></td>
-                <td className="p-4"><P>{cake.stok}</P></td>
-                <td className="p-4"><P>{`Rp ${cake.harga}`}</P></td>
+              <tr
+                key={cake.id_produk}
+                className="border border-gray-300 text-center"
+              >
+                <td className="p-4">
+                  <P>{cake.nama}</P>
+                </td>
+                <td className="p-4">
+                  <P>{cake.Kategori.Kategori}</P>
+                </td>
+                <td className="p-4">
+                  <P>{cake.stok}</P>
+                </td>
+                <td className="p-4">
+                  <P>{`Rp ${cake.harga}`}</P>
+                </td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
-                  <Button variant="outline" icon={<Edit />} onClick={() => handleEdit(cake.id_produk)} />
-                  <Button variant="outline" icon={<Trash />} />
+                  <Button
+                    variant="outline"
+                    icon={<Edit />}
+                    onClick={() => handleEdit(cake.id_produk)}
+                  />
+                  <Button
+                    variant="outline"
+                    icon={<Trash />}
+                    onClick={() => handleDelete(cake.id_produk)}
+                  />
                 </td>
               </tr>
             ))}

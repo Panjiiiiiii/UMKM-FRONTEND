@@ -8,12 +8,13 @@ import Produk from "./layout/produk";
 import { Button } from "@/components/ui/atoms/Button";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
+import Kategori from "./layout/kategori";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLayout, setActiveLayout] = useState("dashboard");
   const [editProduct, setEditProduct] = useState(null);
-
+  const [editCategory, setEditCategory] = useState(null);
   // Fungsi untuk memilih layout
   const renderLayout = () => {
     switch (activeLayout) {
@@ -23,6 +24,8 @@ export default function Page() {
         return <Produk setActiveLayout={setActiveLayout}  editProduct={editProduct} setEditProduct={setEditProduct}/>;
       case "user":
         return <User setActiveLayout={setActiveLayout} />;
+      case "kategori":
+        return <Kategori setActiveLayout={setActiveLayout} editCategory={editCategory} setEditCategory={setEditCategory}/>;
       default:
         return <Dashboard setActiveLayout={setActiveLayout} />;
     }

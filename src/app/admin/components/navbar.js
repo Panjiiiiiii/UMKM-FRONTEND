@@ -1,6 +1,6 @@
 "use client";
 
-import { X, User } from "lucide-react";
+import { X, User, Plus } from "lucide-react";
 import { Button } from "@/components/ui/atoms/Button";
 import { removeCookie } from "@/utils/cookies";
 import { useRouter } from "next/navigation";
@@ -48,16 +48,16 @@ export default function SidebarOverlay({
             </Button>
             <Button
               className={`w-full ${
-                activeLayout === "produk"
+                activeLayout === "kategori"
                   ? "bg-green-800 text-white"
                   : "text-green-800 bg-transparent hover:bg-green-100"
               }`}
               onClick={() => {
-                setActiveLayout("produk");
+                setActiveLayout("kategori");
                 setIsOpen(false);
               }}
             >
-              Produk
+              Kategori
             </Button>
             <Button
               className={`w-full ${

@@ -2,7 +2,6 @@
 
 import { Button, ChangeQuantity } from "@/components/ui/atoms/Button";
 import { useState, useEffect } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, H4 } from "@/components/ui/atoms/Text";
 import { EnumInput, Input, NumberInput, TextBox } from "@/components/ui/atoms/Input";
 import { Send } from "lucide-react";
