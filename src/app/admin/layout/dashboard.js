@@ -1,17 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Edit, Trash } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
+import { getProduk } from "../handler/produk";
 
 export default function Dashboard({ setActiveLayout }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [cakes, setCakes] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getProduk();
+      console.log(response);
+    }
+    fetchData(); 
+  }, []);
 
   // Data Dummy
-  const cakes = [
+  const kue = [
     {
       id: 1,
       product: "Kue Lapis",

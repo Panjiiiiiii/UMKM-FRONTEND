@@ -37,3 +37,19 @@ export default async function login(username, password, router) {
     return null;
   }
 }
+
+export async function forgetPassword(email, password) {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/reset-password`, {
+      email,
+      password,
+    });
+    const data = response.data;
+    if (data.status === "error") {
+      return data.message;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
