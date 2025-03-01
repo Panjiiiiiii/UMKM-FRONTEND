@@ -6,55 +6,38 @@ import { Save, Send } from "lucide-react";
 import { createCategory, updateCategory } from "../handler/category";
 import toast from "react-hot-toast";
 
-export default function CategoryModal({ isOpen, onClose, initialData }) {
+export default function CategoryModal({ isOpen, onClose, initialData, onSuccess }) {
   const [categoryName, setCategoryName] = useState("");
-  const isEditMode = !!initialData; // Jika ada data awal, mode edit
+  const isEditMode = !!initialData;
 
   useEffect(() => {
-    if (initialData) {
-      setCategoryName(initialData.Kategori); // Isi input jika mode edit
-    } else {
-      setCategoryName(""); // Reset jika tambah kategori
-    }
+    setCategoryName(initialData?.Kategori || "");
   }, [initialData]);
 
   const handleSubmit = async () => {
-    if (isEditMode) {
-      try {
-        const response = await updateCategory(initialData.id, categoryName);
-        if(response.status === "success") {
-          toast.success("Kategori berhasil diubah");
-        }
-      } catch (error) {
-        toast.error("Internal server error");
-        console.log(error);
+    try {
+      let response;
+      if (isEditMode) {
+        response = await updateCategory(initialData.id_kategori, categoryName );
+      } else {
+        response = await createCategory(categoryName);
       }
-    } else {
-      try {
-        const response = await createCategory(categoryName);
-        console.log(response);
-        if(response.status === "success") {
-          toast.success("Kategori berhasil ditambahkan");
-        }
-      } catch (error) {
-        toast.error("Internal server error");
-        console.log(error);
+
+      if (response && response.status === "success") {
+        toast.success(`Kategori berhasil ${isEditMode ? "diubah" : "ditambahkan"}`);
+        onSuccess(response.data, isEditMode); // ✅ Update state kategori langsung
+        onClose(); // ✅ Tutup modal
       }
+    } catch (error) {
+      toast.error("Internal server error");
+      console.error(error);
     }
-    onClose(); // Tutup modal setelah submit
   };
 
   return (
-    <Modal
-      title={isEditMode ? "Edit Kategori" : "Tambah Kategori"}
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Modal title={isEditMode ? "Edit Kategori" : "Tambah Kategori"} isOpen={isOpen} onClose={onClose}>
       <div className="space-y-4">
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label className="block text-sm font-medium text-gray-700">
           {isEditMode ? "Ubah nama kategori" : "Masukkan kategori baru"}
         </label>
         <Input
@@ -73,3 +56,4 @@ export default function CategoryModal({ isOpen, onClose, initialData }) {
     </Modal>
   );
 }
+

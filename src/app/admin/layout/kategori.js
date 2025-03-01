@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/atoms/Input";
 import { deleteCategory, getCategory } from "../handler/category";
 import { Edit, Trash } from "lucide-react";
 import CategoryModal from "../components/CategoryModal";
+import toast from "react-hot-toast";
 
 export default function Kategori() {
   const [category, setCategory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null); // Untuk edit
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,15 +27,25 @@ export default function Kategori() {
     setIsModalOpen(true);
   };
 
+  // ✅ Update kategori setelah tambah/edit
+  const handleUpdateCategory = (updatedCategory, isEdit) => {
+    setCategory((prev) => {
+      if (isEdit) {
+        return prev.map((c) =>
+          c.id_kategori === updatedCategory.id_kategori ? updatedCategory : c
+        );
+      }
+      return [...prev, updatedCategory];
+    });
+  };
+
   const handleDelete = async (id_kategori) => {
     if (!confirm("Apakah Anda yakin ingin menghapus produk ini?")) return;
 
     const result = await deleteCategory(id_kategori);
     if (result) {
-      toast.success("Produk berhasil dihapus!");
-      setCategory((prev) =>
-        prev.filter((c) => c.id_kategori !== id_kategori)
-      );
+      toast.success("Kategori berhasil dihapus!");
+      setCategory((prev) => prev.filter((c) => c.id_kategori !== id_kategori));
     } else {
       toast.error("Gagal menghapus produk");
     }
@@ -46,36 +57,52 @@ export default function Kategori() {
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder="Search" />
         <div className="flex flex-row gap-4">
-          <Button variant="primary" onClick={() => handleOpenModal()}>Tambah Kategori</Button>
+          <Button variant="primary" onClick={() => handleOpenModal()}>
+            Tambah Kategori
+          </Button>
         </div>
       </div>
 
-      <div>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead className="bg-green-800 text-white">
-            <tr>
-              <th className="p-4">Nama kategori</th>
-              <th className="p-4">Jumlah Produk</th>
-              <th className="p-4">Action</th>
+      <table className="w-full border-collapse border border-gray-300">
+        <thead className="bg-green-800 text-white">
+          <tr>
+            <th className="p-4">Nama kategori</th>
+            <th className="p-4">Jumlah Produk</th>
+            <th className="p-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {category.map((item) => (
+            <tr
+              key={item.id_kategori}
+              className="border border-gray-300 text-center"
+            >
+              <td className="p-4">{item.Kategori}</td>
+              <td className="p-4">{item._count?.Produk ?? 0}</td>
+              <td className="p-4 flex flex-row gap-4 justify-center">
+                <Button
+                  variant="outline"
+                  icon={<Edit />}
+                  onClick={() => handleOpenModal(item)}
+                />
+                <Button
+                  variant="outline"
+                  icon={<Trash />}
+                  onClick={() => handleDelete(item.id_kategori)}
+                />
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {category.map((item) => (
-              <tr key={item.id_kategori} className="border border-gray-300 text-center">
-                <td className="p-4">{item.Kategori}</td>
-                <td className="p-4">{item._count?.Produk ?? 0}</td>
-                <td className="p-4 flex flex-row gap-4 justify-center">
-                  <Button variant="outline" icon={<Edit />} onClick={() => handleOpenModal(item)} />
-                  <Button variant="outline" icon={<Trash />} onClick={() => handleDelete(item.id_kategori)}/>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
 
       {isModalOpen && (
-        <CategoryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} initialData={selectedCategory} />
+        <CategoryModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialData={selectedCategory}
+          onSuccess={handleUpdateCategory} // ✅ Kirim callback untuk update kategori
+        />
       )}
     </div>
   );
