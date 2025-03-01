@@ -6,10 +6,10 @@ import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Edit, Trash } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
-import { getProduk } from "../handler/produk";
+import { getProduk, getProdukById } from "../handler/produk";
+import toast from "react-hot-toast";
 
-export default function Dashboard({ setActiveLayout }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Dashboard({ setActiveLayout, setEditProduct }) {
   const [cakes, setCake] = useState([]);
 
   useEffect(() => {
@@ -17,11 +17,19 @@ export default function Dashboard({ setActiveLayout }) {
       const response = await getProduk();
       console.log(response);
       setCake(response.data);
-    }
-    fetchData(); 
+    };
+    fetchData();
   }, []);
 
-  // Data Dummy
+  const handleEdit = async (id_produk) => {
+    const productData = await getProdukById(id_produk);
+    if (productData) {
+      setEditProduct(productData.data); // Kirim data ke form edit
+      setActiveLayout("produk"); // Pindah ke halaman addProduk
+    } else {
+      toast.error("Gagal mengambil data produk");
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full p-8">
@@ -29,15 +37,8 @@ export default function Dashboard({ setActiveLayout }) {
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`} />
         <div className="flex flex-row gap-4">
-          <Button
-            variant="primary"
-            children={`Tambah produk`}
-            onClick={() => setActiveLayout("produk")}
-          />
-          <Button
-            variant="primary"
-            children={`Tambah kategori`}
-          />
+          <Button variant="primary" children={`Tambah produk`} onClick={() => setActiveLayout("produk")} />
+          <Button variant="primary" children={`Tambah kategori`} />
         </div>
       </div>
       <div>
@@ -54,28 +55,19 @@ export default function Dashboard({ setActiveLayout }) {
           <tbody>
             {cakes.map((cake) => (
               <tr key={cake.id_produk} className="border border-gray-300 text-center">
-                <td className="p-4">
-                  <P>{cake.nama}</P>
-                </td>
-                <td className="p-4">
-                  <P>{cake.Kategori.Kategori}</P>
-                </td>
-                <td className="p-4">
-                  <P>{cake.stok}</P>
-                </td>
-                <td className="p-4">
-                  <P>{`Rp ${cake.harga}`}</P>
-                </td>
+                <td className="p-4"><P>{cake.nama}</P></td>
+                <td className="p-4"><P>{cake.Kategori.Kategori}</P></td>
+                <td className="p-4"><P>{cake.stok}</P></td>
+                <td className="p-4"><P>{`Rp ${cake.harga}`}</P></td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
-                  <Button variant="outline" icon={<Edit/>} />
-                  <Button variant="outline" icon={<Trash/>} />
+                  <Button variant="outline" icon={<Edit />} onClick={() => handleEdit(cake.id_produk)} />
+                  <Button variant="outline" icon={<Trash />} />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }

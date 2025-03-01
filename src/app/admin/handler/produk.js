@@ -13,6 +13,17 @@ export async function getProduk() {
   }
 }
 
+export async function getProdukById(id) {
+  try {
+    const response = await axios.get(`${BASE_URL}/produk/${id}`, {});
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export async function createProduk({ value }) {
   try {
     const token = Cookies.get("token");

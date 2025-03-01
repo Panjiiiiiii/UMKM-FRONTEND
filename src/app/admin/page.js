@@ -12,14 +12,15 @@ import { Toaster } from "react-hot-toast";
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLayout, setActiveLayout] = useState("dashboard");
+  const [editProduct, setEditProduct] = useState(null);
 
   // Fungsi untuk memilih layout
   const renderLayout = () => {
     switch (activeLayout) {
       case "dashboard":
-        return <Dashboard setActiveLayout={setActiveLayout} />;
+        return <Dashboard setActiveLayout={setActiveLayout} setEditProduct={setEditProduct}/>;
       case "produk":
-        return <Produk setActiveLayout={setActiveLayout} />;
+        return <Produk setActiveLayout={setActiveLayout}  editProduct={editProduct} setEditProduct={setEditProduct}/>;
       case "user":
         return <User setActiveLayout={setActiveLayout} />;
       default:
