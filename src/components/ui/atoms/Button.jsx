@@ -29,23 +29,21 @@ export const Button = ({
   );
 };
 
-export const ChangeQuantity = ({ className }) => {
-  const [count, setCount] = useState(0);
-
+export const ChangeQuantity = ({ className, value, onChange }) => {
   return (
     <div
       className={`flex items-center justify-start w-fit bg-green-800 text-white rounded-full px-2 py-1 ${className}`}
     >
       <button
         className="px-4 py-2 text-sm font-bold"
-        onClick={() => setCount((prev) => Math.max(0, prev - 1))}
+        onClick={() => onChange(Math.max(0, value - 1))}
       >
         −
       </button>
-      <span className="px-2 text-sm font-semibold">{count}</span>
+      <span className="px-2 text-sm font-semibold">{value}</span>
       <button
         className="px-4 py-2 text-sm font-bold"
-        onClick={() => setCount((prev) => prev + 1)}
+        onClick={() => onChange(value + 1)}
       >
         +
       </button>
