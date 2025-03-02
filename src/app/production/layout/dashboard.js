@@ -9,7 +9,7 @@ import { Filter } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function Dashboard() {
+export default function Dashboard({setActiveLayout, setEditBahan}) {
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -56,14 +56,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Bahan</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`}/>

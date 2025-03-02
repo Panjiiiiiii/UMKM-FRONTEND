@@ -35,14 +35,6 @@ export default function Bahan() {
   ];
   return (
     <div className="flex flex-col w-full h-full p-8 ">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Tambah Produk</H2>
       <div className="flex flex-row justify-end mb-8">
         <Button variant="primary" icon={<Send />} children={`Kirim`} />
