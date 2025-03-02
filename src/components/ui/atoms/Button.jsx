@@ -19,7 +19,11 @@ export const Button = ({
         variant === "secondary" &&
           "bg-yellow-300 text-black hover:bg-yellow-400",
         variant === "outline" &&
-          "border border-green-600 text-green-600 hover:bg-green-100",
+          "border border-green-800 text-green-800 hover:bg-green-100",
+        variant === "danger" &&
+          "border border-red-800 text-red-800 hover:bg-red-100",
+        variant === "edit" &&
+          "border border-blue-800 text-blue-800 hover:bg-blue-100",
         className
       )}
     >

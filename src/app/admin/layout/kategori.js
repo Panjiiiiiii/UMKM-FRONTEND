@@ -81,12 +81,12 @@ export default function Kategori() {
               <td className="p-4">{item._count?.Produk ?? 0}</td>
               <td className="p-4 flex flex-row gap-4 justify-center">
                 <Button
-                  variant="outline"
+                  variant="edit"
                   icon={<Edit />}
                   onClick={() => handleOpenModal(item)}
                 />
                 <Button
-                  variant="outline"
+                  variant="danger"
                   icon={<Trash />}
                   onClick={() => handleDelete(item.id_kategori)}
                 />

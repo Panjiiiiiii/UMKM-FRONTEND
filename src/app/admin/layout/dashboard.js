@@ -88,12 +88,12 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
                 </td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
                   <Button
-                    variant="outline"
+                    variant="edit"
                     icon={<Edit />}
                     onClick={() => handleEdit(cake.id_produk)}
                   />
                   <Button
-                    variant="outline"
+                    variant="danger"
                     icon={<Trash />}
                     onClick={() => handleDelete(cake.id_produk)}
                   />
