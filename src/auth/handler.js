@@ -2,7 +2,9 @@
 
 import axios from "axios";
 import { BASE_URL } from "@/schema/secret";
-import { setCookie } from "@/utils/cookies"; // Import setCookie
+import { setCookie, getCookie } from "@/utils/cookies"; // Import setCookie
+
+const token = getCookie("token");    
 
 export default async function login(username, password, router) {
   try {
@@ -48,6 +50,56 @@ export async function forgetPassword(email, password) {
     if (data.status === "error") {
       return data.message;
     }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function resetPassword(id, password) {
+  try {
+    const response = await axios.put(`${BASE_URL}/auth/password/${id}`, {
+      password,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = response.data;
+    if (data.status === "error") {
+      return data.message;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getAllUser() {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/user`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function register(value) {
+  const token = getCookie("token");
+  console.log(value);
+  
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/register`, value, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
   } catch (error) {
     console.log(error);
     return null;
