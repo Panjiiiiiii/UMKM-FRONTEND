@@ -6,6 +6,7 @@ import { Input } from "../../atoms/Input";
 import { Button } from "../../atoms/Button";
 import { Checkbox } from "../../atoms/Input";
 import login from "@/auth/handler"; // Import login handler
+import toast from "react-hot-toast";
 
 export const LoginForm = ({ onSubmit }) => {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -20,10 +21,17 @@ export const LoginForm = ({ onSubmit }) => {
   };
 
   const handleSubmit = async () => {
-    const result = await login(form.username, form.password, router);
-    if (result) {
-      onSubmit(result);
+    try {
+      const result = await login(form.username, form.password, router);
+      if (result) {
+        onSubmit(result);
+      }
+      toast.success(`Berhasil login`);
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal login email/password salah");
     }
+
   };
 
   return (

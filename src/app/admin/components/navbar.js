@@ -13,12 +13,13 @@ export default function SidebarOverlay({
   activeLayout,
 }) {
   if (!isOpen) return null;
-  // const router = useRouter();
-  // const handlerLogOut = () => {
-  //   removeCookie("token");
-  //   toast.success("Logout berhasil")
-  //   router.push("/");
-  // };
+  const router = useRouter();
+  const handlerLogOut = () => {
+    confirm("Apakah Anda yakin ingin logout?");
+    removeCookie("token");
+    toast.success("Logout berhasil")
+    router.push("/");
+  };
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 z-50"
@@ -79,6 +80,7 @@ export default function SidebarOverlay({
               className="w-full flex items-center gap-2 border-green-800 text-green-800"
               icon={<User />}
               children={`Logout`}
+              onClick={handlerLogOut}
             />
           </div>
         </div>
