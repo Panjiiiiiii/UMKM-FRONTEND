@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/schema/secret";
-import Cookies from "js-cookie";
 import axios from "axios";
+import { getCookie } from "@/utils/cookies";
 
 export async function getProduk() {
   try {
@@ -26,7 +26,7 @@ export async function getProdukById(id) {
 
 export async function createProduk({ value }) {
   try {
-    const token = Cookies.get("token");
+    const token = getCookie("token");
 
     const response = await axios.post(`${BASE_URL}/produk/`, value, {
       headers: {
@@ -47,7 +47,7 @@ export async function updateProduk(id, { value }) {
     const formData = new FormData();
     formData.append("value", value);
 
-    const token = Cookies.get("token");
+    const token = getCookie("token");
     const response = await axios.put(`${BASE_URL}/produk/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -63,7 +63,7 @@ export async function updateProduk(id, { value }) {
 
 export async function deleteProduk(id) {
   try {
-    const token = Cookies.get("token");
+    const token = getCookie("token");
     const response = await axios.delete(`${BASE_URL}/produk/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

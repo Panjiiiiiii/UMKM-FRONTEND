@@ -1,64 +1,59 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
-import { Filter } from "lucide-react";
-import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { Input } from "@/components/ui/atoms/Input";
+import { deleteBahan, getBahan, selectBahan } from "../handler/bahan";
+import { Edit, Trash } from "lucide-react";
 
-export default function Dashboard({setActiveLayout, setEditBahan}) {
+export default function Dashboard({ setActiveLayout, setEditBahan }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
-  };
+  const [bahan, setBahan] = useState([]);
 
-  const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getBahan();
+      console.log(response);
+      setBahan(response);
+    }
+    fetchData();
+  },[]);
+
+  const handleEdit = async (id_bahan) => {
+    const bahanData = await selectBahan(id_bahan);
+    if (bahanData) {
+      console.log(bahanData);
+      setEditBahan(bahanData); // Kirim data ke form edit
+      setActiveLayout("bahan"); // Pindah ke halaman addBahan
+    } else {
+      toast.error("Gagal mengambil data bahan");
+    }
+  }
 
   // Data Dummy
-  const cakes = [
-    {
-      id: 1,
-      product: "Kue Lapis",
-      category: "Kue Basah",
-      stock: 15,
-      price: 50000,
-    },
-    {
-      id: 2,
-      product: "Brownies",
-      category: "Kue Kering",
-      stock: 10,
-      price: 75000,
-    },
-    { id: 3, product: "Donat", category: "Roti", stock: 20, price: 30000 },
-    {
-      id: 4,
-      product: "Tart Coklat",
-      category: "Kue Ulang Tahun",
-      stock: 5,
-      price: 50000,
-    },
-    {
-      id: 5,
-      product: "Cheesecake",
-      category: "Dessert",
-      stock: 8,
-      price: 120000,
-    },
-  ];
+
+const handleDelete = async (id_bahan) => {
+  if (!confirm("Apakah Anda yakin ingin menghapus bahan ini?")) return;
+  const result = await deleteBahan(id_bahan);
+  if (result) {
+    toast.success("Bahan berhasil dihapus!");
+    setBahan((prevBahan) =>
+      prevBahan.filter((bahan) => bahan.id_bahan !== id_bahan)
+    );
+  }
+  else {
+    toast.error("Gagal menghapus bahan");
+  }
+}
 
   return (
     <div className="flex flex-col w-full h-full p-8">
       <H2 className={`mb-4`}>Bahan</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
-        <Input placeholder={`Search`}/>
+        <Input placeholder={`Search`} />
         <Button variant="primary" children={`Tambah bahan`} />
       </div>
       <div>
@@ -72,19 +67,28 @@ export default function Dashboard({setActiveLayout, setEditBahan}) {
             </tr>
           </thead>
           <tbody>
-            {cakes.map((cake) => (
-              <tr key={cake.id} className="border border-gray-300 text-center">
+            {bahan.map((bahan) => (
+              <tr key={bahan.id_bahan} className="border border-gray-300 text-center">
                 <td className="p-4">
-                  <P>{cake.product}</P>
+                  <P>{bahan.nama}</P>
                 </td>
                 <td className="p-4">
-                  <P>{cake.category}</P>
+                  <P>{bahan.stok}</P>
                 </td>
                 <td className="p-4">
-                  <P>{cake.stock}</P>
+                  <P>{bahan.satuan}</P>
                 </td>
-                <td className="p-4">
-                  <P>{`Rp ${cake.price.toLocaleString("id-ID")}`}</P>
+                <td className="p-4 flex flex-row gap-4 justify-center">
+                <Button
+                    variant="edit"
+                    icon={<Edit />}
+                    onClick={() => handleEdit(bahan.id_bahan)}
+                  />
+                  <Button
+                    variant="danger"
+                    icon={<Trash />}
+                    onClick={() => handleDelete(bahan.id_bahan)}
+                  />
                 </td>
               </tr>
             ))}

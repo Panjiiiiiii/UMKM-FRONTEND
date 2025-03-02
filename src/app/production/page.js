@@ -10,15 +10,15 @@ import SidebarOverlay from "./components/navbar";
 export default function Page({}) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLayout, setActiveLayout] = useState("dashboard");
-
+  const [editBahan, setEditBahan] = useState(null);
   const renderLayout = () => {
     switch (activeLayout) {
       case "dashboard":
-        return <Dashboard setActiveLayout={setActiveLayout} />;
+        return <Dashboard setActiveLayout={setActiveLayout} setEditBahan={setEditBahan}/>;
       case "bahan":
-        return <Bahan setActiveLayout={setActiveLayout} />;
+        return <Bahan editBahan={editBahan} setActiveLayout={setActiveLayout} />;
       default:
-        return <Dashboard setActiveLayout={setActiveLayout} />;
+        return <Dashboard setActiveLayout={setActiveLayout}/>;
     }
   };
   return (
