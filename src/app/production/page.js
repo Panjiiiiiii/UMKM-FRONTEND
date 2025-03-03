@@ -16,7 +16,7 @@ export default function Page({}) {
       case "dashboard":
         return <Dashboard setActiveLayout={setActiveLayout} setEditBahan={setEditBahan}/>;
       case "bahan":
-        return <Bahan editBahan={editBahan} setActiveLayout={setActiveLayout} />;
+        return <Bahan editBahan={editBahan} setActiveLayout={setActiveLayout} setEditBahan={setEditBahan}/>;
       default:
         return <Dashboard setActiveLayout={setActiveLayout}/>;
     }

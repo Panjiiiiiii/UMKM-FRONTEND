@@ -3,6 +3,10 @@ import { X, User } from "lucide-react";
 import { Button } from "@/components/ui/atoms/Button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Modal } from "@/components/ui/organism/Modal";
+import { LogoutConfirm } from "@/components/ui/molecules/Modal/Logout";
+import { removeCookie } from "@/utils/cookies";
+import toast from "react-hot-toast";
 
 export default function SidebarOverlay({
   isOpen,
@@ -51,7 +55,7 @@ export default function SidebarOverlay({
               <Button
                 variant="ghost"
                 className={`w-full ${
-                  activeLayout === "kategori"
+                  activeLayout === "bahan"
                     ? "bg-green-800 text-white"
                     : "text-green-800 bg-transparent hover:bg-green-100"
                 }`}
@@ -60,7 +64,7 @@ export default function SidebarOverlay({
                   setIsOpen(false);
                 }}
               >
-                Tambah Bahan
+                Bahan
               </Button>
             </nav>
             <div className="mt-auto p-4">

@@ -33,6 +33,7 @@ export async function selectBahan(id) {
 
 export async function addBahan(value) {
   try {
+    console.log(value);
     const response = await axios.post(`${BASE_URL}/bahan/`, value, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -45,8 +46,9 @@ export async function addBahan(value) {
   }
 }
 
-export async function editBahan(id, value) {
+export async function updateBahan(id, value) {
   try {
+    console.log(id, value);
     const response = await axios.put(`${BASE_URL}/bahan/${id}`, value, {
       headers: {
         Authorization: `Bearer ${token}`,

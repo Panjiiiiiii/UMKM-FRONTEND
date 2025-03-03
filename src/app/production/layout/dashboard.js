@@ -2,25 +2,22 @@
 
 import { Button } from "@/components/ui/atoms/Button";
 import { useEffect, useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Input } from "@/components/ui/atoms/Input";
 import { deleteBahan, getBahan, selectBahan } from "../handler/bahan";
 import { Edit, Trash } from "lucide-react";
 
 export default function Dashboard({ setActiveLayout, setEditBahan }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [bahan, setBahan] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getBahan();
       console.log(response);
       setBahan(response);
-    }
+    };
     fetchData();
-  },[]);
+  }, []);
 
   const handleEdit = async (id_bahan) => {
     const bahanData = await selectBahan(id_bahan);
@@ -31,30 +28,36 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
     } else {
       toast.error("Gagal mengambil data bahan");
     }
-  }
+  };
 
   // Data Dummy
 
-const handleDelete = async (id_bahan) => {
-  if (!confirm("Apakah Anda yakin ingin menghapus bahan ini?")) return;
-  const result = await deleteBahan(id_bahan);
-  if (result) {
-    toast.success("Bahan berhasil dihapus!");
-    setBahan((prevBahan) =>
-      prevBahan.filter((bahan) => bahan.id_bahan !== id_bahan)
-    );
-  }
-  else {
-    toast.error("Gagal menghapus bahan");
-  }
-}
+  const handleDelete = async (id_bahan) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus bahan ini?")) return;
+    const result = await deleteBahan(id_bahan);
+    if (result) {
+      toast.success("Bahan berhasil dihapus!");
+      setBahan((prevBahan) =>
+        prevBahan.filter((bahan) => bahan.id_bahan !== id_bahan)
+      );
+    } else {
+      toast.error("Gagal menghapus bahan");
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full p-8">
       <H2 className={`mb-4`}>Bahan</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`} />
-        <Button variant="primary" children={`Tambah bahan`} />
+        <Button
+          variant="primary"
+          children={`Tambah bahan`}
+          onClick={() => {
+            setEditBahan(null); // Reset editBahan sebelum menambah bahan baru
+            setActiveLayout("bahan");
+          }}
+        />
       </div>
       <div>
         <table className="w-full border-collapse border border-gray-300">
@@ -68,7 +71,10 @@ const handleDelete = async (id_bahan) => {
           </thead>
           <tbody>
             {bahan.map((bahan) => (
-              <tr key={bahan.id_bahan} className="border border-gray-300 text-center">
+              <tr
+                key={bahan.id_bahan}
+                className="border border-gray-300 text-center"
+              >
                 <td className="p-4">
                   <P>{bahan.nama}</P>
                 </td>
@@ -79,7 +85,7 @@ const handleDelete = async (id_bahan) => {
                   <P>{bahan.satuan}</P>
                 </td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
-                <Button
+                  <Button
                     variant="edit"
                     icon={<Edit />}
                     onClick={() => handleEdit(bahan.id_bahan)}
@@ -95,7 +101,6 @@ const handleDelete = async (id_bahan) => {
           </tbody>
         </table>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }
