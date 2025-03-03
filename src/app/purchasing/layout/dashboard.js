@@ -1,71 +1,61 @@
 "use client";
-import { Button } from "@/components/ui/atoms/Button";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/atoms/Input";
-import { MenuCard } from "@/components/ui/molecules/Card";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { useState } from "react";
-import { Sidebar } from "lucide-react";
-import SidebarOverlay from "../components/navbar";
-const menuData = [
-  {
-    id: 1,
-    image: "/images/menu1.jpg",
-    name: "Kue Coklat",
-    stock: 10,
-    price: 25000,
-  },
-  {
-    id: 2,
-    image: "/images/menu2.jpg",
-    name: "Donat Keju",
-    stock: 5,
-    price: 15000,
-  },
-  {
-    id: 3,
-    image: "/images/menu3.jpg",
-    name: "Brownies",
-    stock: 8,
-    price: 30000,
-  },
-  {
-    id: 4,
-    image: "/images/menu4.jpg",
-    name: "Cupcake",
-    stock: 12,
-    price: 18000,
-  },
-];
+import { MenuCard } from "@/app/purchasing/components/Card";
+import { getProduk } from "../handler/purchasing";
+import { H2 } from "@/components/ui/atoms/Text";
 
-export default function Dashboard() {
-  const [isOpen, setIsOpen] = useState(false); // Add this line to open the sidebar
+export default function Dashboard({ setActiveLayout }) {
+  const [produkByKategori, setProdukByKategori] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getProduk();
+      const data = response.data;
+
+      // Mengelompokkan produk berdasarkan kategori
+      const groupedData = data.reduce((acc, item) => {
+        const kategori = item.Kategori.Kategori;
+        if (!acc[kategori]) {
+          acc[kategori] = [];
+        }
+        acc[kategori].push(item);
+        return acc;
+      }, {});
+
+      setProdukByKategori(groupedData);
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex flex-col w-full h-full p-12">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)} // Add this line to open the sidebar
-        />
-        <Input placeholder={"Search"} />
+    <div className="flex flex-col w-full h-full items-center p-12">
+      {/* Input Search di atas */}
+      <div className="w-full max-w-screen-lg px-4 mb-8">
+        <Input type="text" placeholder="Search" className="w-full" />
       </div>
-      <div className="flex flex-row justify-center">
-        <div className="flex flex-row justify-between">
-          <div className="grid grid-cols-4 gap-[40px]">
-            {menuData.map((menu) => (
-              <MenuCard
-                key={menu.id}
-                image={menu.image}
-                name={menu.name}
-                stock={menu.stock}
-                price={menu.price}
-              />
-            ))}
+
+      {/* Grid container untuk kategori dan MenuCard */}
+      <div className="flex w-full justify-center">
+        {Object.entries(produkByKategori).map(([kategori, produk]) => (
+          <div key={kategori}>
+            {/* Judul kategori */}
+            <H2>{kategori}</H2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+              {produk.map((menu) => (
+                <MenuCard
+                  key={menu.id_produk}
+                  id_produk={menu.id_produk}
+                  image={menu.foto}
+                  name={menu.nama}
+                  stock={menu.stok}
+                  price={menu.harga}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }
