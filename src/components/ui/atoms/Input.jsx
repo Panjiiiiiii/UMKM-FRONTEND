@@ -93,7 +93,7 @@ export const EnumInput = ({ label, name, value, onChange, options }) => {
       <select
         id={name}
         name={name}
-        value={value}
+        value={value || ""}
         onChange={onChange}
         className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
       >
