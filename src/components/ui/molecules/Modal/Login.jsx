@@ -25,13 +25,12 @@ export const LoginForm = ({ onSubmit }) => {
       const result = await login(form.username, form.password, router);
       if (result) {
         onSubmit(result);
+        toast.success(`Berhasil login`);
       }
-      toast.success(`Berhasil login`);
     } catch (error) {
+      toast.error("Gagal login");
       console.log(error);
-      toast.error("Gagal login email/password salah");
     }
-
   };
 
   return (

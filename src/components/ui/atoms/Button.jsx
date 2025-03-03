@@ -40,17 +40,24 @@ export const ChangeQuantity = ({ className, value, onChange }) => {
     >
       <button
         className="px-4 py-2 text-sm font-bold"
-        onClick={() => onChange(Math.max(0, value - 1))}
+        onClick={() => {
+          const newValue = Math.max(0, value - 1);
+          onChange(newValue);
+        }}
       >
         −
       </button>
       <span className="px-2 text-sm font-semibold">{value}</span>
       <button
         className="px-4 py-2 text-sm font-bold"
-        onClick={() => onChange(value + 1)}
+        onClick={() => {
+          const newValue = value + 1;
+          onChange(newValue);
+        }}
       >
         +
       </button>
     </div>
   );
 };
+
