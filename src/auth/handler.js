@@ -3,6 +3,7 @@
 import axios from "axios";
 import { BASE_URL } from "@/schema/secret";
 import { setCookie, getCookie } from "@/utils/cookies"; // Import setCookie
+import toast from "react-hot-toast";
 
 const token = getCookie("token");    
 
@@ -35,6 +36,7 @@ export default async function login(username, password, router) {
       }
     }
   } catch (error) {
+    toast.error("Gagal login");
     console.log(error);
     return null;
   }
