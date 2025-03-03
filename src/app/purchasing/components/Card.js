@@ -26,7 +26,7 @@ export const MenuCard = ({ id_produk, image, name, stock, price }) => {
   }, [id_produk, stock]);
 
   const handleQuantityChange = (newQuantity) => {
-    if (newQuantity < 0) return; // Mencegah qty negatif
+    if (newQuantity < 0) return; // Cegah qty negatif
 
     if (newQuantity > stock) {
       toast.error("Stok tidak mencukupi");
@@ -35,20 +35,21 @@ export const MenuCard = ({ id_produk, image, name, stock, price }) => {
 
     // **Update State**
     setQuantity(newQuantity);
-    setCurrentStock(stock - newQuantity); // Pastikan stok berkurang sesuai dengan qty
+    setCurrentStock(stock - newQuantity);
 
     // **Update Local Storage**
     const storedCart = getLocalStorage("cart");
     let cart = storedCart ? JSON.parse(storedCart) : {};
 
     if (newQuantity === 0) {
-      delete cart[id_produk]; // Hapus item jika qty = 0
+      delete cart[id_produk]; // Hapus produk jika qty = 0
     } else {
       cart[id_produk] = newQuantity; // Update qty
     }
 
+    // Simpan kembali ke localStorage setelah perubahan
     setLocalStorage("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated")); // Trigger event jika dibutuhkan
+    window.dispatchEvent(new Event("cartUpdated")); // Notifikasi ke event listener jika ada
   };
 
   return (

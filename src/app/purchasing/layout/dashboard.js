@@ -4,9 +4,11 @@ import { Input } from "@/components/ui/atoms/Input";
 import { MenuCard } from "@/app/purchasing/components/Card";
 import { getProduk } from "../handler/purchasing";
 import { H2 } from "@/components/ui/atoms/Text";
+import Cart from "../components/cart"; // Import komponen Cart
 
 export default function Dashboard({ setActiveLayout }) {
   const [produkByKategori, setProdukByKategori] = useState({});
+  const [hasItems, setHasItems] = useState(false); // Cek apakah ada item di cart
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +27,21 @@ export default function Dashboard({ setActiveLayout }) {
 
       setProdukByKategori(groupedData);
     };
+
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const checkCart = () => {
+      const storedCart = localStorage.getItem("cart");
+      const cartItems = storedCart ? JSON.parse(storedCart) : {};
+      setHasItems(Object.keys(cartItems).length > 0);
+    };
+
+    checkCart();
+    window.addEventListener("cartUpdated", checkCart);
+
+    return () => window.removeEventListener("cartUpdated", checkCart);
   }, []);
 
   return (
@@ -56,6 +72,9 @@ export default function Dashboard({ setActiveLayout }) {
           </div>
         ))}
       </div>
+
+      {/* ✅ Menampilkan tombol Cart jika ada item */}
+      {hasItems && <Cart />}
     </div>
   );
 }

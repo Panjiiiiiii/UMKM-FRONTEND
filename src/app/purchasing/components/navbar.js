@@ -53,9 +53,6 @@ export default function SidebarOverlay({
               >
                 Dashboard
               </Button>
-              <Button variant="ghost" className="text-green-800">
-                Keranjang
-              </Button>
               <Button
                 className={`w-full ${
                   activeLayout === "histori"
@@ -67,7 +64,7 @@ export default function SidebarOverlay({
                   setIsOpen(false);
                 }}
               >
-                Dashboard
+                Histori
               </Button>
             </nav>
             <div className="mt-auto p-4">
