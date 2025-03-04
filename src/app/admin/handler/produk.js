@@ -44,16 +44,14 @@ export async function createProduk({ value }) {
 
 export async function updateProduk(id, { value }) {
   try {
-    const formData = new FormData();
-    formData.append("value", value);
-
     const token = getCookie("token");
-    const response = await axios.put(`${BASE_URL}/produk/${id}`, formData, {
+    const response = await axios.put(`${BASE_URL}/produk/${id}`, value, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(response);
     return response.data;
   } catch (error) {
     console.log(error);

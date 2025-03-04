@@ -84,7 +84,7 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
                   <P>{cake.stok}</P>
                 </td>
                 <td className="p-4">
-                  <P>{`Rp ${cake.harga}`}</P>
+                  <P>{`Rp ${cake.harga.toLocaleString()}`}</P>
                 </td>
                 <td className="p-4 flex flex-row gap-4 justify-center">
                   <Button
