@@ -27,6 +27,22 @@ export async function getTransaksi() {
   }
 }
 
+export async function getDetailTransaksi(id) {
+  try {
+    const response = await axios.get(`${BASE_URL}/transaksi/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export async function createTransaksi(value) {
   try {
     const response = await axios.post(`${BASE_URL}/transaksi/`, value, {
