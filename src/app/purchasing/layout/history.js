@@ -1,29 +1,23 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useEffect, useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
-import { Filter } from "lucide-react";
+import { Filter, Save } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { getTransaksi } from "../handler/purchasing";
+import { getTransaksi, changeStatus } from "../handler/purchasing";
+import { EnumInput } from "@/components/ui/atoms/Input";
+import toast from "react-hot-toast";
 
 export default function History({ setActiveLayout }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
   const [transaksi, setTransaksi] = useState([]);
+  const [updatedTransactions, setUpdatedTransactions] = useState({});
+
   const toggleSort = () => setSortAsc(!sortAsc);
-
-  const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
-  };
-
-  const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,49 +27,57 @@ export default function History({ setActiveLayout }) {
     fetchData();
   }, []);
 
-  // // Data Dummy
-  // const transactions = [
-  //   {
-  //     id: 1,
-  //     name: "Budi Santoso",
-  //     phone: "081234567890",
-  //     date: "2025-02-20",
-  //     total: 1500000,
-  //     status: "Selesai",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Ani Wijaya",
-  //     phone: "082345678901",
-  //     date: "2025-02-18",
-  //     total: 2300000,
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Siti Rahma",
-  //     phone: "083456789012",
-  //     date: "2025-02-22",
-  //     total: 750000,
-  //     status: "Selesai",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Doni Prasetyo",
-  //     phone: "084567890123",
-  //     date: "2025-02-19",
-  //     total: 3200000,
-  //     status: "Dibatalkan",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Rina Puspita",
-  //     phone: "085678901234",
-  //     date: "2025-02-21",
-  //     total: 1100000,
-  //     status: "Selesai",
-  //   },
-  // ];
+  const status = [
+    { value: "LUNAS", label: "LUNAS" },
+    { value: "BELUM_LUNAS", label: "BELUM_LUNAS" },
+    { value: "BATAL", label: "BATAL" },
+  ];
+
+  const handleStatusChange = (transactionId, newStatus) => {
+    setUpdatedTransactions((prev) => {
+      console.log("Updated Transactions:", { ...prev, [transactionId]: newStatus }); // Debug log
+      return { ...prev, [transactionId]: newStatus };
+    });
+  };  
+
+  const handleSubmit = async (transactionId) => {
+    const newStatus = updatedTransactions[transactionId];
+    
+    if (!newStatus) {
+      toast.error("Status tidak boleh kosong!");
+      return;
+    }
+  
+    try {
+      console.log("Mengirim status:", newStatus, "untuk transaksi:", transactionId); // Debug log
+      
+      const response = await changeStatus(transactionId, newStatus);
+
+      console.log(response);
+      
+      if (response.data.status === "success") {
+        toast.success("Berhasil update status!");
+        
+        setTransaksi((prev) =>
+          prev.map((trx) =>
+            trx.id_transaksi === transactionId ? { ...trx, status: newStatus } : trx
+          )
+        );
+  
+        setUpdatedTransactions((prev) => {
+          const newUpdates = { ...prev };
+          delete newUpdates[transactionId];
+          return newUpdates;
+        });
+      } else {
+        toast.error("Gagal update status!");
+      }
+    } catch (error) {
+      toast.error("Internal server error");
+      console.error("Error saat update status:", error);
+    }
+  };
+  
 
   const sortedTransactions = transaksi.sort((a, b) => {
     return sortAsc
@@ -85,14 +87,14 @@ export default function History({ setActiveLayout }) {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <H2 className={`mb-4`}>Histori Pembelian</H2>
+      <H2 className="mb-4">Histori Pembelian</H2>
       <div className="flex flex-row justify-end items-center gap-12 mb-8">
-        <Button icon={<Filter />} variant="primary" children={`Filter`} />
+        <Button icon={<Filter />} variant="primary">Filter</Button>
         <DateRangeFilter
           startDate={startDate}
           endDate={endDate}
-          onStartDateChange={handleStartDateChange}
-          onEndDateChange={handleEndDateChange}
+          onStartDateChange={(e) => setStartDate(e.target.value)}
+          onEndDateChange={(e) => setEndDate(e.target.value)}
         />
       </div>
       <div>
@@ -102,46 +104,41 @@ export default function History({ setActiveLayout }) {
               <th className="p-4">Nama Pelanggan</th>
               <th className="p-4">Nomor Telepon</th>
               <th className="p-4 cursor-pointer" onClick={toggleSort}>
-                Tanggal Transaksi{" "}
-                {sortAsc ? (
-                  <ArrowUp className="inline" />
-                ) : (
-                  <ArrowDown className="inline" />
-                )}
+                Tanggal Transaksi {sortAsc ? <ArrowUp className="inline" /> : <ArrowDown className="inline" />}
               </th>
               <th className="p-4">Total Harga</th>
               <th className="p-4">Status</th>
+              <th className="p-4">Action</th>
             </tr>
           </thead>
           <tbody>
             {sortedTransactions.map((transaction) => (
-              <tr
-                key={transaction.id_transaksi}
-                className="border border-gray-300 text-center"
-              >
+              <tr key={transaction.id_transaksi} className="border border-gray-300 text-center">
+                <td className="p-4"><P>{transaction.Nama_pelanggan}</P></td>
+                <td className="p-4"><P>{transaction.Nomor_telepon}</P></td>
+                <td className="p-4"><P>{new Date(transaction.tanggal_transaksi).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</P></td>
+                <td className="p-4"><P>Rp. {transaction.total.toLocaleString("id-ID")}</P></td>
+                
+                {/* Kolom Status */}
                 <td className="p-4">
-                  <P>{transaction.Nama_pelanggan}</P>
+                  <div className="flex flex-row items-center justify-center gap-4">
+                    <EnumInput
+                      options={status}
+                      value={updatedTransactions[transaction.id_transaksi] ?? transaction.status}
+                      onChange={(e) => handleStatusChange(transaction.id_transaksi, e.target.value)}
+                    />
+                    {updatedTransactions[transaction.id_transaksi] &&
+                      updatedTransactions[transaction.id_transaksi] !== transaction.status && (
+                        <Button variant="primary" icon={<Save />} onClick={() => handleSubmit(transaction.id_transaksi)} />
+                      )}
+                  </div>
                 </td>
+
+                {/* Kolom Action */}
                 <td className="p-4">
-                  <P>{transaction.Nomor_telepon}</P>
-                </td>
-                <td className="p-4">
-                  <P>
-                    {new Date(transaction.tanggal_transaksi).toLocaleDateString(
-                      "id-ID",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )}
-                  </P>
-                </td>
-                <td className="p-4">
-                  <P>Rp. {transaction.total.toLocaleString("id-ID")}</P>
-                </td>
-                <td className="p-4">
-                  <P>{transaction.status}</P>
+                  <div className="flex justify-center">
+                    <Button variant="primary" onClick={() => setActiveLayout("detail", transaction.id_transaksi)}>Detail</Button>
+                  </div>
                 </td>
               </tr>
             ))}

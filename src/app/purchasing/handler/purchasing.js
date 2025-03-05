@@ -41,12 +41,11 @@ export async function createTransaksi(value) {
   }
 }
 
-
 export async function changeStatus(id, status) {
   try {
     const response = await axios.put(
       `${BASE_URL}/transaksi/status/${id}`,
-      status,
+      { status },
       {
         headers: {
           Authorization: `Bearer ${token}`,
