@@ -1,16 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Filter, Printer } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { ArrowUp, ArrowDown } from "lucide-react";
 
-export default function History() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function History({setActiveLayout}) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
@@ -73,14 +70,6 @@ export default function History() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Histori Pembelian</H2>
       <div className="flex flex-row justify-end items-center gap-12 mb-8">
         <DateRangeFilter
@@ -118,7 +107,6 @@ export default function History() {
           </tbody>
         </table>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }

@@ -1,15 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function Produky() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Produk({setActiveLayout}) {
   const [sortAsc, setSortAsc] = useState(true);
   const toggleSort = () => setSortAsc(!sortAsc);
   // Data Dummy
@@ -51,14 +47,6 @@ export default function Produky() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <H2 className={`mb-4`}>Penjualan Produk</H2>
       <div className="flex flex-row justify-between items-center gap-12 mb-8">
         <Input placeholder={`Search`} />
@@ -93,7 +81,6 @@ export default function Produky() {
           </tbody>
         </table>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }

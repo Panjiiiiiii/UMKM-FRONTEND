@@ -1,17 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/atoms/Button";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
-import SidebarOverlay from "../components/navbar";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Filter, TrendingUp } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
 
-export default function Dashboard() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Dashboard({setActiveLayout}) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
@@ -76,14 +73,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col w-full h-full p-8">
-      <div className="flex flex-row gap-8 mb-8">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className={`rounded-md p-4`}
-          onClick={() => setIsOpen(true)}
-        />
-      </div>
       <div className="flex flex-row justify-between gap-8 mb-8">
         <div className="flex flex-col w-full rounded-lg shadow-lg p-8">
           <P className={`text-gray-300`}>Total Transaksi</P>
@@ -165,7 +154,6 @@ export default function Dashboard() {
           </tbody>
         </table>
       </div>
-      {isOpen && <SidebarOverlay isOpen={isOpen} setIsOpen={setIsOpen} />}
     </div>
   );
 }
