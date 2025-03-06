@@ -7,16 +7,30 @@ import { Edit, Trash } from "lucide-react";
 import { Input } from "@/components/ui/atoms/Input";
 import { getProduk, getProdukById, deleteProduk } from "../handler/produk";
 import toast from "react-hot-toast";
+import Card from "../components/Card";
 
 export default function Dashboard({ setActiveLayout, setEditProduct }) {
+  const [produkByKategori, setProdukByKategori] = useState({});
   const [cakes, setCake] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await getProduk();
-      console.log(response);
-      setCake(response.data);
+      const data = response.data;
+
+      // Mengelompokkan produk berdasarkan kategori
+      const groupedData = data.reduce((acc, item) => {
+        const kategori = item.Kategori.Kategori;
+        if (!acc[kategori]) {
+          acc[kategori] = [];
+        }
+        acc[kategori].push(item);
+        return acc;
+      }, {});
+
+      setProdukByKategori(groupedData);
     };
+
     fetchData();
   }, []);
 
@@ -58,7 +72,7 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
         </div>
       </div>
       <div>
-        <table className="w-full border-collapse border border-gray-300">
+        {/* <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-green-800 text-white">
             <tr>
               <th className="p-4">Nama Produk</th>
@@ -101,7 +115,29 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
+        <div className="flex w-full justify-center">
+          {Object.entries(produkByKategori).map(([kategori, produk]) => (
+            <div key={kategori}>
+              {/* Judul kategori */}
+              <H2>{kategori}</H2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+                {produk.map((menu) => (
+                  <Card
+                    key={menu.id_produk}
+                    id_produk={menu.id_produk}
+                    image={menu.foto}
+                    name={menu.nama}
+                    stock={menu.stok}
+                    price={menu.harga}
+                    setEditProduct={setEditProduct}
+                    setActiveLayout={setActiveLayout}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
