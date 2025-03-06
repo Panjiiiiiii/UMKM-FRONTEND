@@ -8,7 +8,7 @@ import { Checkbox } from "../../atoms/Input";
 import login from "@/auth/handler"; // Import login handler
 import toast from "react-hot-toast";
 
-export const LoginForm = ({ onSubmit }) => {
+export const LoginForm = ({ onSubmit, onForgotPassword }) => {
   const [form, setForm] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter(); // Use useRouter to navigate
@@ -56,6 +56,14 @@ export const LoginForm = ({ onSubmit }) => {
       <Button variant="primary" onClick={handleSubmit} fullWidth>
         Login
       </Button>
+      <div className="mt-4">
+        <span
+          className="text-blue-500 cursor-pointer mt-4"
+          onClick={onForgotPassword}
+        >
+          Forgot Password?
+        </span>
+      </div>
     </div>
   );
 };

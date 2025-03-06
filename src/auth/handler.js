@@ -44,14 +44,11 @@ export default async function login(username, password, router) {
 
 export async function forgetPassword(email, password) {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/reset-password`, {
+    const response = await axios.put(`${BASE_URL}/auth/reset-password`, {
       email,
       password,
     });
-    const data = response.data;
-    if (data.status === "error") {
-      return data.message;
-    }
+    return response.data;
   } catch (error) {
     console.log(error);
     return null;
