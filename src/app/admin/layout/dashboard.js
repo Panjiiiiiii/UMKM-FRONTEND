@@ -72,50 +72,6 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
         </div>
       </div>
       <div>
-        {/* <table className="w-full border-collapse border border-gray-300">
-          <thead className="bg-green-800 text-white">
-            <tr>
-              <th className="p-4">Nama Produk</th>
-              <th className="p-4">Kategori</th>
-              <th className="p-4">Stok</th>
-              <th className="p-4">Harga</th>
-              <th className="p-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cakes.map((cake) => (
-              <tr
-                key={cake.id_produk}
-                className="border border-gray-300 text-center"
-              >
-                <td className="p-4">
-                  <P>{cake.nama}</P>
-                </td>
-                <td className="p-4">
-                  <P>{cake.Kategori.Kategori}</P>
-                </td>
-                <td className="p-4">
-                  <P>{cake.stok}</P>
-                </td>
-                <td className="p-4">
-                  <P>{`Rp ${cake.harga.toLocaleString()}`}</P>
-                </td>
-                <td className="p-4 flex flex-row gap-4 justify-center">
-                  <Button
-                    variant="edit"
-                    icon={<Edit />}
-                    onClick={() => handleEdit(cake.id_produk)}
-                  />
-                  <Button
-                    variant="danger"
-                    icon={<Trash />}
-                    onClick={() => handleDelete(cake.id_produk)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table> */}
         <div className="flex w-full justify-center">
           {Object.entries(produkByKategori).map(([kategori, produk]) => (
             <div key={kategori}>
