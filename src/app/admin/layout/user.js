@@ -10,7 +10,7 @@ import { Modal } from "@/components/ui/organism/Modal";
 import { getAllUser } from "@/auth/handler";
 import ResetPasswordModal from "../components/ResetPasswordModal";
 import { Input } from "@/components/ui/atoms/Input";
-import Pagination from "@/components/ui/atoms/Pagination";
+import Pagination from "@/components/ui/molecules/Pagination";
 
 export default function User() {
   const [isOpen, setIsOpen] = useState(false);

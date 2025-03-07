@@ -6,7 +6,7 @@ import { H2, P } from "@/components/ui/atoms/Text";
 import { Input } from "@/components/ui/atoms/Input";
 import { deleteBahan, getBahan, selectBahan } from "../handler/bahan";
 import { Edit, Trash } from "lucide-react";
-import Pagination from "@/components/ui/atoms/Pagination";
+import Pagination from "@/components/ui/molecules/Pagination";
 
 export default function Dashboard({ setActiveLayout, setEditBahan }) {
   const [bahan, setBahan] = useState([]);

@@ -8,7 +8,7 @@ import { deleteCategory, getCategory } from "../handler/category";
 import { Edit, Trash } from "lucide-react";
 import CategoryModal from "../components/CategoryModal";
 import toast from "react-hot-toast";
-import Pagination from "@/components/ui/atoms/Pagination";
+import Pagination from "@/components/ui/molecules/Pagination";
 
 export default function Kategori() {
   const [category, setCategory] = useState([]);
