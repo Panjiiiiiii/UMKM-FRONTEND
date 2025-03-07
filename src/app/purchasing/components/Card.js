@@ -53,10 +53,10 @@ export const MenuCard = ({ id_produk, image, name, stock, price }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 w-[442px] h-[600px] flex flex-col border-4 border-green-800">
+    <div className="bg-white rounded-xl shadow-md p-4 w-full max-w-[442px] h-[600px] flex flex-col border-4 border-green-800">
       {/* Gambar Menu */}
       <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
-        <img src={image} alt={name} width={442} height={300} className="w-full object-fill rounded-md" />
+        <img src={image} alt={name} className="w-full h-full object-cover rounded-md" />
       </div>
 
       {/* Informasi Menu */}
