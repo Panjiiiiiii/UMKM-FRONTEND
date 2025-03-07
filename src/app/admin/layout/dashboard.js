@@ -12,6 +12,7 @@ import Card from "../components/Card";
 export default function Dashboard({ setActiveLayout, setEditProduct }) {
   const [produkByKategori, setProdukByKategori] = useState({});
   const [cakes, setCake] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,43 +59,57 @@ export default function Dashboard({ setActiveLayout, setEditProduct }) {
     }
   };
 
+  const filteredProdukByKategori = Object.entries(produkByKategori).reduce(
+    (acc, [kategori, produk]) => {
+      const filteredProduk = produk.filter((item) =>
+        item.nama.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      if (filteredProduk.length > 0) {
+        acc[kategori] = filteredProduk;
+      }
+      return acc;
+    },
+    {}
+  );
+
   return (
-    <div className="flex flex-col w-full h-full p-8">
-      <H2 className={`mb-4`}>Produk</H2>
-      <div className="flex flex-row justify-between items-center gap-12 mb-8">
-        <Input placeholder={`Search`} />
-        <div className="flex flex-row gap-4">
-          <Button
-            variant="primary"
-            children={`Tambah produk`}
-            onClick={() => setActiveLayout("produk")}
-          />
-        </div>
-      </div>
-      <div>
-        <div className="flex w-full justify-center">
-          {Object.entries(produkByKategori).map(([kategori, produk]) => (
-            <div key={kategori}>
-              {/* Judul kategori */}
-              <H2>{kategori}</H2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-                {produk.map((menu) => (
-                  <Card
-                    key={menu.id_produk}
-                    id_produk={menu.id_produk}
-                    image={menu.foto}
-                    name={menu.nama}
-                    stock={menu.stok}
-                    price={menu.harga}
-                    setEditProduct={setEditProduct}
-                    setActiveLayout={setActiveLayout}
-                  />
-                ))}
-              </div>
-            </div>
+<div className="flex flex-col w-full h-full p-8">
+  <div className="flex flex-row justify-between items-center gap-12 mb-8 mt-4">
+    <Input
+      placeholder={`Search`}
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+    <div className="flex flex-row gap-4">
+      <Button
+        variant="primary"
+        children={`Tambah produk`}
+        onClick={() => setActiveLayout("produk")}
+      />
+    </div>
+  </div>
+  <div className="w-full">
+    {Object.entries(filteredProdukByKategori).map(([kategori, produk]) => (
+      <div key={kategori} className="w-full">
+        {/* Judul kategori */}
+        <H2>{kategori}</H2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8 w-full">
+          {produk.map((menu) => (
+            <Card
+              key={menu.id_produk}
+              id_produk={menu.id_produk}
+              image={menu.foto}
+              name={menu.nama}
+              stock={menu.stok}
+              price={menu.harga}
+              setEditProduct={setEditProduct}
+              setActiveLayout={setActiveLayout}
+            />
           ))}
         </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
   );
 }

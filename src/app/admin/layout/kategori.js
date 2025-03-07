@@ -2,17 +2,20 @@
 
 import { Button } from "@/components/ui/atoms/Button";
 import { useState, useEffect } from "react";
-import { H2 } from "@/components/ui/atoms/Text";
+import { H2, P } from "@/components/ui/atoms/Text";
 import { Input } from "@/components/ui/atoms/Input";
 import { deleteCategory, getCategory } from "../handler/category";
 import { Edit, Trash } from "lucide-react";
 import CategoryModal from "../components/CategoryModal";
 import toast from "react-hot-toast";
+import Pagination from "@/components/ui/atoms/Pagination";
 
 export default function Kategori() {
   const [category, setCategory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +54,12 @@ export default function Kategori() {
     }
   };
 
+  const totalItems = category.length;
+  const paginatedCategories = category.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="flex flex-col w-full h-full p-8">
       <H2 className="mb-4">Kategori</H2>
@@ -72,13 +81,13 @@ export default function Kategori() {
           </tr>
         </thead>
         <tbody>
-          {category.map((item) => (
+          {paginatedCategories.map((item) => (
             <tr
               key={item.id_kategori}
               className="border border-gray-300 text-center"
             >
-              <td className="p-4">{item.Kategori}</td>
-              <td className="p-4">{item._count?.Produk ?? 0}</td>
+              <td className="p-4"><P>{item.Kategori}</P></td>
+              <td className="p-4"><P>{item._count?.Produk ?? 0}</P></td>
               <td className="p-4 flex flex-row gap-4 justify-center">
                 <Button
                   variant="edit"
@@ -95,6 +104,13 @@ export default function Kategori() {
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
 
       {isModalOpen && (
         <CategoryModal
