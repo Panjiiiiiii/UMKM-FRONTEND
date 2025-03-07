@@ -18,14 +18,14 @@ export const Input = ({ label, name, value, onChange, type = "text", placeholder
 // components/atoms/Checkbox.js
 export const Checkbox = ({ label, checked, value, onChange }) => {
   return (
-    <label className="flex items-center space-x-2 cursor-pointer">
+    <label className="flex items-center space-x-2 cursor-pointer w-full">
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="hidden peer" // Peer untuk styling
+        className="hidden peer"
       />
-      <div className="w-4 h-4 border-2 border-gray-500 rounded-sm flex items-center justify-center peer-checked:border-green-800 peer-checked:bg-green-800 transition">
+      <div className="w-5 h-5 border-2 border-gray-500 rounded-sm flex items-center justify-center peer-checked:border-green-800 peer-checked:bg-green-800 transition">
         {checked && (
           <svg
             className="w-4 h-4 text-white"
@@ -40,7 +40,7 @@ export const Checkbox = ({ label, checked, value, onChange }) => {
           </svg>
         )}
       </div>
-      {label && <span className="text-gray-700">{label}</span>}
+      {label && <span className="text-sm sm:text-base text-gray-700">{label}</span>}
     </label>
   );
 };

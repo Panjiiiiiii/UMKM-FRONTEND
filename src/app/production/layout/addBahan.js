@@ -137,7 +137,7 @@ export default function Bahan({ setActiveLayout, editBahan, setEditBahan }) {
         </div>
         <div className="flex flex-col gap-8 justify-between">
           <H4>Produk yang menggunakan bahan</H4>
-          <div className="grid grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {Array.isArray(produk) &&
               produk.map((p) => (
                 <Checkbox
