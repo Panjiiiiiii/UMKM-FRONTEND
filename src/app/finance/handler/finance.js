@@ -17,8 +17,6 @@ export async function getTransaksi() {
   }
 }
 
-
-
 export async function getDetailTransaksi(id) {
     try {
       const response = await axios.get(`${BASE_URL}/finance/${id}`, {
