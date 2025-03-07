@@ -5,7 +5,7 @@ import { BASE_URL } from "@/schema/secret";
 import { setCookie, getCookie } from "@/utils/cookies"; // Import setCookie
 import toast from "react-hot-toast";
 
-const token = getCookie("token");    
+const token = getCookie("token");
 
 export default async function login(username, password, router) {
   try {
@@ -57,13 +57,17 @@ export async function forgetPassword(email, password) {
 
 export async function resetPassword(id, password) {
   try {
-    const response = await axios.put(`${BASE_URL}/auth/password/${id}`, {
-      password,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.put(
+      `${BASE_URL}/auth/password/${id}`,
+      {
+        password,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const data = response.data;
     if (data.status === "error") {
       return data.message;
@@ -76,10 +80,8 @@ export async function resetPassword(id, password) {
 
 export async function getAllUser() {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/user`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.get(`${BASE_URL}/auth/user`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
@@ -91,7 +93,7 @@ export async function getAllUser() {
 export async function register(value) {
   const token = getCookie("token");
   console.log(value);
-  
+
   try {
     const response = await axios.post(`${BASE_URL}/auth/register`, value, {
       headers: {
