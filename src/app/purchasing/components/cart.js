@@ -64,12 +64,16 @@ export default function Cart({ setActiveLayout }) {
         })),
       };
   
-      const response = await createTransaksi(payload);
-      
-      if (!response) throw new Error("Gagal melakukan transaksi");
+      await toast.promise(
+        createTransaksi(payload), // 🛒 Request transaksi
+        {
+          loading: "Memproses transaksi...",
+          success: "Transaksi berhasil!",
+          error: "Gagal melakukan transaksi.",
+        }
+      );
   
-      toast.success("Transaksi berhasil");
-      
+      // Jika sukses, lanjutkan eksekusi
       localStorage.removeItem("cart");
       window.dispatchEvent(new Event("cartUpdated"));
       window.location.reload();
@@ -77,9 +81,9 @@ export default function Cart({ setActiveLayout }) {
       setShowUserModal(false);
     } catch (error) {
       console.error(error);
-      toast.error("Gagal melakukan transaksi");
     }
   };
+  
   
   
 
