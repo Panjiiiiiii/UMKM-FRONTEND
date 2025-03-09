@@ -7,17 +7,27 @@ import { Input } from "@/components/ui/atoms/Input";
 import { deleteBahan, getBahan, selectBahan } from "../handler/bahan";
 import { Edit, Trash } from "lucide-react";
 import Pagination from "@/components/ui/molecules/Pagination";
+import toast from "react-hot-toast";
 
 export default function Dashboard({ setActiveLayout, setEditBahan }) {
   const [bahan, setBahan] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // 🔍 State untuk pencarian
+  const [isLoading, setIsLoading] = useState(true); // 🔄 Loader state
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // 🛠 Atur jumlah item per halaman
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getBahan();
-      setBahan(response);
+      setIsLoading(true);
+      try {
+        const response = await getBahan();
+        setBahan(response);
+      } catch (error) {
+        console.error("Error fetching bahan:", error);
+        toast.error("Gagal mengambil data bahan");
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -34,21 +44,31 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
 
   const handleDelete = async (id_bahan) => {
     if (!confirm("Apakah Anda yakin ingin menghapus bahan ini?")) return;
-    const result = await deleteBahan(id_bahan);
-    if (result) {
-      toast.success("Bahan berhasil dihapus!");
-      setBahan((prevBahan) => prevBahan.filter((bahan) => bahan.id_bahan !== id_bahan));
-    } else {
-      toast.error("Gagal menghapus bahan");
+
+    const deletePromise = deleteBahan(id_bahan);
+
+    toast.promise(deletePromise, {
+      loading: "Menghapus bahan...",
+      success: "Bahan berhasil dihapus!",
+      error: "Gagal menghapus bahan",
+    });
+
+    try {
+      const result = await deletePromise;
+      if (result) {
+        setBahan((prevBahan) =>
+          prevBahan.filter((bahan) => bahan.id_bahan !== id_bahan)
+        );
+      }
+    } catch (error) {
+      console.error("Gagal menghapus bahan:", error);
     }
   };
 
-  // 🔍 Filter berdasarkan searchQuery
   const filteredBahan = bahan.filter((item) =>
     item.nama.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 📌 Pagination
   const totalItems = filteredBahan.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedBahan = filteredBahan.slice(
@@ -56,14 +76,12 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
     currentPage * itemsPerPage
   );
 
-  // ⏩ Fungsi ganti halaman
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  // 🔄 Reset pagination saat searchQuery berubah
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
@@ -102,38 +120,69 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
             </tr>
           </thead>
           <tbody>
-            {paginatedBahan.map((item) => (
-              <tr key={item.id_bahan} className="border border-gray-300 text-center">
-                <td className="p-4">
-                  <P>{item.nama}</P>
-                </td>
-                <td className="p-4">
-                  <P>{item.stok}</P>
-                </td>
-                <td className="p-4">
-                  <P>{item.satuan}</P>
-                </td>
-                <td className="p-4 flex flex-row gap-4 justify-center">
-                  <Button variant="edit" icon={<Edit />} onClick={() => handleEdit(item.id_bahan)} />
-                  <Button
-                    variant="danger"
-                    icon={<Trash />}
-                    onClick={() => handleDelete(item.id_bahan)}
-                  />
+            {isLoading ? (
+              // Skeleton loading
+              [...Array(5)].map((_, index) => (
+                <tr
+                  key={index}
+                  className="border border-gray-300 text-center animate-pulse"
+                >
+                  <td className="p-4 bg-gray-200 h-6 rounded"></td>
+                  <td className="p-4 bg-gray-200 h-6 rounded"></td>
+                  <td className="p-4 bg-gray-200 h-6 rounded"></td>
+                  <td className="p-4 bg-gray-200 h-6 rounded"></td>
+                </tr>
+              ))
+            ) : totalItems === 0 ? (
+              // Tidak ada data
+              <tr>
+                <td colSpan={4} className="p-4 text-center text-gray-500">
+                  ⚠️ Tidak ada data bahan.
                 </td>
               </tr>
-            ))}
+            ) : (
+              paginatedBahan.map((item) => (
+                <tr
+                  key={item.id_bahan}
+                  className="border border-gray-300 text-center"
+                >
+                  <td className="p-4">
+                    <P>{item.nama}</P>
+                  </td>
+                  <td className="p-4">
+                    <P>{item.stok}</P>
+                  </td>
+                  <td className="p-4">
+                    <P>{item.satuan}</P>
+                  </td>
+                  <td className="p-4 flex flex-row gap-4 justify-center">
+                    <Button
+                      variant="edit"
+                      icon={<Edit />}
+                      onClick={() => handleEdit(item.id_bahan)}
+                    />
+                    <Button
+                      variant="danger"
+                      icon={<Trash />}
+                      onClick={() => handleDelete(item.id_bahan)}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       {/* ⏩ Pagination */}
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {!isLoading && totalItems > 0 && (
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 }

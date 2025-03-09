@@ -65,38 +65,38 @@ export default function Bahan({ setActiveLayout, editBahan, setEditBahan }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (
-      !bahan.nama ||
-      !bahan.stok ||
-      !bahan.satuan ||
-      !bahan.produk_Bahan.length
-    ) {
+  
+    if (!bahan.nama || !bahan.stok || !bahan.satuan || !bahan.produk_Bahan.length) {
       toast.error("Harap lengkapi semua data sebelum mengirim.");
       return;
     }
-
+  
+    const action = editBahan && editBahan.id_bahan 
+      ? updateBahan(editBahan.id_bahan, bahan) 
+      : addBahan(bahan);
+  
+    toast.promise(action, {
+      loading: editBahan ? "Memperbarui bahan..." : "Menambahkan bahan...",
+      success: editBahan ? "Bahan berhasil diperbarui!" : "Bahan berhasil ditambahkan!",
+      error: "Terjadi kesalahan saat mengirim data.",
+    });
+  
     try {
-      if (editBahan && editBahan.id_bahan) {
-        // Pastikan ini hanya untuk edit
-        await updateBahan(editBahan.id_bahan, bahan);
-        toast.success("Bahan berhasil diperbarui!");
-      } else {
-        await addBahan(bahan);
-        toast.success("Bahan berhasil ditambahkan!");
-      }
-
+      await action;
+  
       // Reset form setelah submit
       setBahan({ nama: "", stok: 0, satuan: "", produk_Bahan: [] });
       setEditBahan(null);
       setActiveLayout("dashboard");
+  
+      // Refresh data bahan
       const updatedBahan = await getBahan();
       setBahan(updatedBahan);
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Terjadi kesalahan saat mengirim data.");
     }
   };
+  
 
   return (
     <div className="flex flex-col w-full h-full p-8">
