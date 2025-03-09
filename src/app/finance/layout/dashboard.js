@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { H1, H2, P } from "@/components/ui/atoms/Text";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { getTransaksi, soldProduk } from "../handler/finance";
-import SalesCharts from "../components/SalesCharts";
-import TrendCharts from "../components/TrendCharts";
-import RevenueCharts from "../components/TrendCharts";
+import DashboardCharts from "../components/SalesCharts"; // Import komponen baru
 
 export default function Dashboard({ setActiveLayout }) {
   const [transaksi, setTransaksi] = useState([]);
@@ -27,7 +25,7 @@ export default function Dashboard({ setActiveLayout }) {
           (t) => t.status === "LUNAS"
         );
 
-        setTransaksi(transaksiLunas); // Tambahkan ini supaya `TrendCharts` mendapatkan data transaksi
+        setTransaksi(transaksiLunas);
 
         const totalAll = transaksiLunas.reduce((sum, t) => sum + t.total, 0);
         setTotalAllPemasukkan(totalAll);
@@ -87,8 +85,8 @@ export default function Dashboard({ setActiveLayout }) {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full p-8">
-      <div className="mb-8">
+    <div className="flex flex-col w-full h-full p-4">
+      <div className="mb-8 pl-4">
         <H1>Live Dashboard</H1>
       </div>
       <div className="grid grid-cols-2 gap-8 mb-8">
@@ -148,10 +146,7 @@ export default function Dashboard({ setActiveLayout }) {
       </div>
 
       {/* Komponen Chart */}
-      <div className="space-x-4 space-y-4">
-        <RevenueCharts transaksi={transaksi} />
-        <SalesCharts produk={produk} />
-      </div>
+      <DashboardCharts produk={produk} transaksi={transaksi} />
     </div>
   );
 }

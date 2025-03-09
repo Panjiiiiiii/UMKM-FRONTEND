@@ -2,22 +2,26 @@
 
 import { Button } from "@/components/ui/atoms/Button";
 import { useEffect, useState } from "react";
-import { H2, P } from "@/components/ui/atoms/Text";
-import { Filter, Printer, Save } from "lucide-react";
+import { H1, H2, P } from "@/components/ui/atoms/Text";
+import { Printer } from "lucide-react";
 import { DateRangeFilter } from "@/components/ui/molecules/Date";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { createReport, getTransaksi } from "../handler/finance";
 import DetailTransaksi from "../components/DetailTransaksi";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/atoms/Input";
+import Pagination from "@/components/ui/molecules/Pagination"; // Import komponen Pagination
 
 export default function History({ setActiveLayout }) {
   const [startDate, setStartDate] = useState("");
-  const [link, setLink] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
   const [transaksi, setTransaksi] = useState([]);
   const [detailModal, setDetailModal] = useState(false);
   const [selectedTransactionId, setSelectedTransactionId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // State untuk halaman aktif
+  const itemsPerPage = 5; // Jumlah item per halaman
 
   const toggleSort = () => setSortAsc(!sortAsc);
 
@@ -29,24 +33,45 @@ export default function History({ setActiveLayout }) {
     fetchData();
   }, []);
 
-  const status = [
-    { value: "LUNAS", label: "LUNAS" },
-    { value: "BELUM_LUNAS", label: "BELUM_LUNAS" },
-    { value: "BATAL", label: "BATAL" },
-  ];
+  // Fungsi untuk memfilter transaksi berdasarkan search dan date range
+  const filteredTransactions = transaksi
+    .filter((transaction) => {
+      const matchesSearch = transaction.Nama_pelanggan
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
-  const sortedTransactions = transaksi.sort((a, b) => {
-    return sortAsc
-      ? new Date(a.tanggal_transaksi) - new Date(b.tanggal_transaksi)
-      : new Date(b.tanggal_transaksi) - new Date(a.tanggal_transaksi);
-  });
+      const transactionDate = new Date(transaction.tanggal_transaksi);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      const matchesDateRange =
+        (!start || transactionDate >= start) &&
+        (!end || transactionDate <= end);
+
+      return matchesSearch && matchesDateRange;
+    })
+    .sort((a, b) => {
+      return sortAsc
+        ? new Date(b.tanggal_transaksi) - new Date(a.tanggal_transaksi)
+        : new Date(a.tanggal_transaksi) - new Date(b.tanggal_transaksi);
+    });
+
+  // Pagination logic
+  const totalItems = filteredTransactions.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedTransactions = filteredTransactions.slice(
+    startIndex,
+    endIndex
+  );
 
   const openModal = (id) => {
     setSelectedTransactionId(id);
     setDetailModal(true);
   };
 
-  const handlePrint = async() => {
+  const handlePrint = async () => {
     try {
       const response = await createReport();
       setLink(response.data.sheetUrl);
@@ -54,26 +79,38 @@ export default function History({ setActiveLayout }) {
     } catch (error) {
       console.log(error);
       toast.error("Gagal membuat laporan");
-      
     }
-  }
+  };
 
   return (
     <>
       <div className="flex flex-col w-full h-full p-8">
-        <H2 className="mb-4">Histori Pembelian</H2>
-        <div className="flex flex-row justify-end items-center gap-12 mb-8">
-          <Button icon={<Filter />} variant="primary">
-            Filter
+        <H1 className="mb-4">Histori Pembelian</H1>
+        {/* Baris untuk Search, DateRangeFilter, dan Print Button */}
+        <div className="flex justify-between items-center gap-4 mb-8">
+          {/* Sisi Kiri: Search dan DateRangeFilter */}
+          <div className="flex items-center gap-8">
+            <Input
+              placeholder="Cari pelanggan"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} // Update state saat input berubah
+              className="flex-1 max-w-[300px]" // Atur lebar maksimum
+            />
+            <DateRangeFilter
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={(e) => setStartDate(e.target.value)}
+              onEndDateChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+
+          {/* Sisi Kanan: Print Button */}
+          <Button icon={<Printer />} variant="outline" onClick={handlePrint}>
+            Print Report
           </Button>
-          <DateRangeFilter
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={(e) => setStartDate(e.target.value)}
-            onEndDateChange={(e) => setEndDate(e.target.value)}
-          />
-          <Button icon={<Printer/>} variant="outline" children={`Print Report`} onClick={() => handlePrint()}/>
         </div>
+
+        {/* Tabel Transaksi */}
         <div>
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-green-800 text-white">
@@ -94,7 +131,7 @@ export default function History({ setActiveLayout }) {
               </tr>
             </thead>
             <tbody>
-              {sortedTransactions.map((transaction) => (
+              {paginatedTransactions.map((transaction) => (
                 <tr
                   key={transaction.id_transaksi}
                   className="border border-gray-300 text-center"
@@ -119,8 +156,6 @@ export default function History({ setActiveLayout }) {
                   <td className="p-4">
                     <P>Rp. {transaction.total.toLocaleString("id-ID")}</P>
                   </td>
-
-                  {/* Kolom Status */}
                   <td className="p-4">
                     <P>{transaction.status}</P>
                   </td>
@@ -139,6 +174,14 @@ export default function History({ setActiveLayout }) {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
       {detailModal && (
         <DetailTransaksi
