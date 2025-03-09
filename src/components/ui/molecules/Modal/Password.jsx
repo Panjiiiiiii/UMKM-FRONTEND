@@ -43,22 +43,30 @@ export const PasswordForm = ({ onSubmit }) => {
       toast.error("Password and Confirm Password do not match");
       return;
     }
-
+  
+    const resetPromise = forgetPassword(form.email, form.password);
+  
+    toast.promise(
+      resetPromise,
+      {
+        loading: "Sedang mengganti password...",
+        success: "Berhasil mengganti password!",
+        error: "Gagal mengganti password",
+      }
+    );
+  
     try {
-      const result = await forgetPassword(form.email, form.password);
-      console.log(result);
-
+      const result = await resetPromise;
       if (result) {
         onSubmit(result);
-        toast.success(`Berhasil mengganti password`);
-        // Redirect to login form
+        // Redirect ke halaman login setelah berhasil
         window.location.href = "/";
       }
     } catch (error) {
-      toast.error("Gagal mengganti password");
       console.log(error);
     }
   };
+  
 
   return (
     <div className="space-y-4">

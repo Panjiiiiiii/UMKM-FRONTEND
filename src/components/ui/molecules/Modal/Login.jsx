@@ -21,14 +21,23 @@ export const LoginForm = ({ onSubmit, onForgotPassword }) => {
   };
 
   const handleSubmit = async () => {
+    const loginPromise = login(form.username, form.password, router);
+  
+    toast.promise(
+      loginPromise,
+      {
+        loading: "Sedang login...",
+        success: "Berhasil login!",
+        error: "Gagal login",
+      }
+    );
+  
     try {
-      const result = await login(form.username, form.password, router);
+      const result = await loginPromise;
       if (result) {
         onSubmit(result);
-        toast.success(`Berhasil login`);
       }
     } catch (error) {
-      toast.error("Gagal login");
       console.log(error);
     }
   };
