@@ -40,31 +40,53 @@ export default function Produk({ setActiveLayout, editProduct, setEditProduct })
         foto: editProduct.foto,
         id_kategori: editProduct.id_kategori,
       });
+    } else {
+      // Reset state hanya saat menambahkan produk baru
+      setProduct({
+        nama: "",
+        harga: "",
+        stok: 0,
+        foto: "",
+        id_kategori: "",
+      });
     }
   }, [editProduct]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!product.nama || !product.harga || !product.stok || !product.id_kategori || !product.foto) {
-      toast.error("Harap lengkapi semua data sebelum mengirim.");
+    // Validasi hanya field yang diperlukan
+    if (!product.nama || !product.harga || !product.id_kategori || !product.foto) {
+      toast.error("Harap lengkapi data yang diperlukan sebelum mengirim.");
       return;
     }
 
-    try {
-      if (editProduct) {
-        await updateProduk(editProduct.id_produk, { value: product });
-        toast.success("Produk berhasil diperbarui!");
-      } else {
-        await createProduk({ value: product });
-        toast.success("Produk berhasil ditambahkan!");
-      }
+    const submitPromise = editProduct
+      ? updateProduk(editProduct.id_produk, { value: product })
+      : createProduk({ value: product });
 
-      setProduct({ nama: "", harga: "", stok: 0, foto: "", id_kategori: "" });
+    toast.promise(submitPromise, {
+      loading: editProduct ? "Memperbarui produk..." : "Menambahkan produk...",
+      success: editProduct ? "Produk berhasil diperbarui!" : "Produk berhasil ditambahkan!",
+      error: "Terjadi kesalahan!",
+    });
+
+    try {
+      await submitPromise;
+      // Reset state hanya saat menambahkan produk baru
+      if (!editProduct) {
+        setProduct({
+          nama: "",
+          harga: "",
+          stok: 0,
+          foto: "",
+          id_kategori: "",
+        });
+      }
       setEditProduct(null);
       setActiveLayout("dashboard");
     } catch (error) {
-      toast.error("Terjadi kesalahan!");
+      console.error("Terjadi kesalahan:", error);
     }
   };
 

@@ -4,8 +4,16 @@ import { Edit, Trash } from "lucide-react";
 import { getProdukById, deleteProduk } from "../handler/produk";
 import toast from "react-hot-toast";
 
-export default function Card({ id_produk, image, name, stock, price, setEditProduct, setActiveLayout }) {
-  
+export default function Card({
+  id_produk,
+  image,
+  name,
+  stock,
+  price,
+  onDelete,
+  setEditProduct,
+  setActiveLayout,
+}) {
   const handleEdit = async (id_produk) => {
     const productData = await getProdukById(id_produk);
     if (productData) {
@@ -13,20 +21,6 @@ export default function Card({ id_produk, image, name, stock, price, setEditProd
       setActiveLayout("produk"); // Pindah ke halaman addProduk
     } else {
       toast.error("Gagal mengambil data produk");
-    }
-  };
-
-  const handleDelete = async (id_produk) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus produk ini?")) return;
-
-    const result = await deleteProduk(id_produk);
-    if (result) {
-      toast.success("Produk berhasil dihapus!");
-      setCake((prevCakes) =>
-        prevCakes.filter((cake) => cake.id_produk !== id_produk)
-      );
-    } else {
-      toast.error("Gagal menghapus produk");
     }
   };
 
@@ -49,13 +43,13 @@ export default function Card({ id_produk, image, name, stock, price, setEditProd
         <div className="flex flex-row justify-start gap-4 mt-4">
           <Button
             variant="edit"
-            icon={<Edit/>}
+            icon={<Edit />}
             onClick={() => handleEdit(id_produk)}
           />
           <Button
             variant="danger"
-            icon={<Trash/>}
-            onClick={() => handleDelete(id_produk)}
+            icon={<Trash />}
+            onClick={() => onDelete(id_produk)}
           />
         </div>
       </div>

@@ -15,22 +15,29 @@ export default function CategoryModal({ isOpen, onClose, initialData, onSuccess 
   }, [initialData]);
 
   const handleSubmit = async () => {
-    try {
-      let response;
-      if (isEditMode) {
-        response = await updateCategory(initialData.id_kategori, categoryName );
-      } else {
-        response = await createCategory(categoryName);
-      }
+    if (!categoryName.trim()) {
+      toast.error("Nama kategori tidak boleh kosong!");
+      return;
+    }
 
+    const submitPromise = isEditMode
+      ? updateCategory(initialData.id_kategori, categoryName)
+      : createCategory(categoryName);
+
+    toast.promise(submitPromise, {
+      loading: isEditMode ? "Menyimpan perubahan..." : "Menambahkan kategori...",
+      success: isEditMode ? "Kategori berhasil diperbarui!" : "Kategori berhasil ditambahkan!",
+      error: "Terjadi kesalahan! Coba lagi.",
+    });
+
+    try {
+      const response = await submitPromise;
       if (response && response.status === "success") {
-        toast.success(`Kategori berhasil ${isEditMode ? "diubah" : "ditambahkan"}`);
-        onSuccess(response.data, isEditMode); // ✅ Update state kategori langsung
-        onClose(); // ✅ Tutup modal
+        onSuccess(response.data, isEditMode); // ✅ Update kategori di state
+        onClose(); // ✅ Tutup modal setelah sukses
       }
     } catch (error) {
-      toast.error("Internal server error");
-      console.error(error);
+      console.error("Gagal menyimpan kategori:", error);
     }
   };
 
@@ -56,4 +63,3 @@ export default function CategoryModal({ isOpen, onClose, initialData, onSuccess 
     </Modal>
   );
 }
-

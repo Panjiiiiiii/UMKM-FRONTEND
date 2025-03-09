@@ -14,13 +14,19 @@ export default function ResetPasswordModal({ isOpen, onClose, userId }) {
   };
 
   const handleResetPassword = async () => {
+    const resetPromise = resetPassword(userId, password);
+
+    toast.promise(resetPromise, {
+      loading: "Memperbarui password...",
+      success: "Password berhasil diperbarui 🎉",
+      error: "Gagal memperbarui password ❌",
+    });
+
     try {
-      await resetPassword(userId, password);
-      toast.success("Password berhasil diperbarui");
-      onClose();
+      await resetPromise;
+      onClose(); // ✅ Modal tertutup otomatis setelah sukses
     } catch (error) {
-      console.error(error);
-      toast.error("Internal server error");
+      console.error("Error resetting password:", error);
     }
   };
 
@@ -39,11 +45,9 @@ export default function ResetPasswordModal({ isOpen, onClose, userId }) {
           checked={showPassword}
           onChange={toggleShowPassword}
         />
-        <Button
-          variant="primary"
-          children={`Reset Password`}
-          onClick={handleResetPassword}
-        />
+        <Button variant="primary" onClick={handleResetPassword}>
+          Reset Password
+        </Button>
       </div>
     </Modal>
   );

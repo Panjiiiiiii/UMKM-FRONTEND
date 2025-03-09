@@ -21,12 +21,20 @@ export default function User() {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 State untuk pencarian
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true); // ⏳ State untuk loading
   const itemsPerPage = 5; // 🛠 Atur jumlah item per halaman
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllUser();
-      setUsers(response.data);
+      setIsLoading(true); // 🔄 Aktifkan loading sebelum fetch
+      try {
+        const response = await getAllUser();
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data user:", error);
+      } finally {
+        setIsLoading(false); // ✅ Matikan loading setelah fetch selesai
+      }
     };
     fetchData();
   }, []);
@@ -69,7 +77,11 @@ export default function User() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button icon={<User2 />} variant="primary" onClick={() => setOpenRegister(true)}>
+        <Button
+          icon={<User2 />}
+          variant="primary"
+          onClick={() => setOpenRegister(true)}
+        >
           Register
         </Button>
       </div>
@@ -86,46 +98,80 @@ export default function User() {
             </tr>
           </thead>
           <tbody>
-            {paginatedUsers.map((user) => (
-              <tr key={user.id_user} className="border border-gray-300 text-center">
-                <td className="p-4">
-                  <P>{user.username}</P>
-                </td>
-                <td className="p-4">
-                  <P>{user.email}</P>
-                </td>
-                <td className="p-4">
-                  <P>{user.role}</P>
-                </td>
-                <td className="p-4 flex justify-center">
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      setSelectedUserId(user.id_user);
-                      setOpenPassword(true);
-                    }}
-                  >
-                    Reset Password
-                  </Button>
+            {isLoading ? (
+              // ⏳ Skeleton Loader saat data masih loading
+              [...Array(itemsPerPage)].map((_, index) => (
+                <tr
+                  key={index}
+                  className="border border-gray-300 text-center animate-pulse"
+                >
+                  <td className="p-4 bg-gray-200 rounded">&nbsp;</td>
+                  <td className="p-4 bg-gray-200 rounded">&nbsp;</td>
+                  <td className="p-4 bg-gray-200 rounded">&nbsp;</td>
+                  <td className="p-4 flex justify-center">
+                    <div className="w-24 h-8 bg-gray-200 rounded"></div>
+                  </td>
+                </tr>
+              ))
+            ) : paginatedUsers.length > 0 ? (
+              paginatedUsers.map((user) => (
+                <tr
+                  key={user.id_user}
+                  className="border border-gray-300 text-center"
+                >
+                  <td className="p-4">
+                    <P>{user.username}</P>
+                  </td>
+                  <td className="p-4">
+                    <P>{user.email}</P>
+                  </td>
+                  <td className="p-4">
+                    <P>{user.role}</P>
+                  </td>
+                  <td className="p-4 flex justify-center">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setSelectedUserId(user.id_user);
+                        setOpenPassword(true);
+                      }}
+                    >
+                      Reset Password
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              // ❌ Tampilkan pesan jika tidak ada data
+              <tr>
+                <td colSpan="4" className="p-4 text-center text-gray-500">
+                  Tidak ada user yang ditemukan
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
       {/* ⏩ Pagination */}
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {!isLoading && totalItems > 0 && (
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       {/* 📌 Modal Register */}
       {openRegister && (
-        <Modal isOpen={openRegister} onClose={() => setOpenRegister(false)} title="Add user">
-          <RegisterForm />
+        <Modal
+          isOpen={openRegister}
+          onClose={() => setOpenRegister(false)}
+          title="Add user"
+        >
+          <RegisterForm onClose={() => setOpenRegister(false)} />{" "}
+          {/* ✅ Modal otomatis tertutup */}
         </Modal>
       )}
 

@@ -15,12 +15,20 @@ export default function Kategori() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true); // ✅ Tambahkan state untuk loading
   const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getCategory();
-      setCategory(response.data);
+      setIsLoading(true); // ✅ Aktifkan loading sebelum fetch
+      try {
+        const response = await getCategory();
+        setCategory(response.data);
+      } catch (error) {
+        toast.error("Gagal mengambil data kategori!");
+      } finally {
+        setIsLoading(false); // ✅ Matikan loading setelah fetch selesai
+      }
     };
     fetchData();
   }, []);
@@ -30,7 +38,6 @@ export default function Kategori() {
     setIsModalOpen(true);
   };
 
-  // ✅ Update kategori setelah tambah/edit
   const handleUpdateCategory = (updatedCategory, isEdit) => {
     setCategory((prev) => {
       if (isEdit) {
@@ -45,12 +52,17 @@ export default function Kategori() {
   const handleDelete = async (id_kategori) => {
     if (!confirm("Apakah Anda yakin ingin menghapus produk ini?")) return;
 
-    const result = await deleteCategory(id_kategori);
-    if (result) {
-      toast.success("Kategori berhasil dihapus!");
+    toast.promise(deleteCategory(id_kategori), {
+      loading: "Menghapus kategori...",
+      success: "Kategori berhasil dihapus!",
+      error: "Gagal menghapus kategori!",
+    });
+
+    try {
+      await deleteCategory(id_kategori);
       setCategory((prev) => prev.filter((c) => c.id_kategori !== id_kategori));
-    } else {
-      toast.error("Gagal menghapus produk");
+    } catch (error) {
+      console.error("Gagal menghapus kategori:", error);
     }
   };
 
@@ -81,27 +93,41 @@ export default function Kategori() {
           </tr>
         </thead>
         <tbody>
-          {paginatedCategories.map((item) => (
-            <tr
-              key={item.id_kategori}
-              className="border border-gray-300 text-center"
-            >
-              <td className="p-4"><P>{item.Kategori}</P></td>
-              <td className="p-4"><P>{item._count?.Produk ?? 0}</P></td>
-              <td className="p-4 flex flex-row gap-4 justify-center">
-                <Button
-                  variant="edit"
-                  icon={<Edit />}
-                  onClick={() => handleOpenModal(item)}
-                />
-                <Button
-                  variant="danger"
-                  icon={<Trash />}
-                  onClick={() => handleDelete(item.id_kategori)}
-                />
+          {isLoading ? (
+            <tr>
+              <td colSpan="3" className="p-4 text-center">
+                <P>Loading data...</P>
               </td>
             </tr>
-          ))}
+          ) : paginatedCategories.length > 0 ? (
+            paginatedCategories.map((item) => (
+              <tr
+                key={item.id_kategori}
+                className="border border-gray-300 text-center"
+              >
+                <td className="p-4"><P>{item.Kategori}</P></td>
+                <td className="p-4"><P>{item._count?.Produk ?? 0}</P></td>
+                <td className="p-4 flex flex-row gap-4 justify-center">
+                  <Button
+                    variant="edit"
+                    icon={<Edit />}
+                    onClick={() => handleOpenModal(item)}
+                  />
+                  <Button
+                    variant="danger"
+                    icon={<Trash />}
+                    onClick={() => handleDelete(item.id_kategori)}
+                  />
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" className="p-4 text-center">
+                Tidak ada kategori tersedia.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 
