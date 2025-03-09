@@ -9,7 +9,7 @@ import DashboardCharts from "../components/SalesCharts"; // Import komponen baru
 export default function Dashboard({ setActiveLayout }) {
   const [transaksi, setTransaksi] = useState([]);
   const [produk, setProduk] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [totalPemasukkan, setTotalPemasukkan] = useState(0);
   const [totalTransaksi, setTotalTransaksi] = useState(0);
   const [totalItemTerjual, setTotalItemTerjual] = useState(0);
@@ -24,28 +24,28 @@ export default function Dashboard({ setActiveLayout }) {
         const transaksiLunas = response.data.filter(
           (t) => t.status === "LUNAS"
         );
-
+  
         setTransaksi(transaksiLunas);
-
+  
         const totalAll = transaksiLunas.reduce((sum, t) => sum + t.total, 0);
         setTotalAllPemasukkan(totalAll);
-
+  
         const today = new Date().toISOString().split("T")[0];
         const todayTransaksi = transaksiLunas.filter((t) =>
           t.tanggal_transaksi.startsWith(today)
         );
-
+  
         const totalToday = todayTransaksi.reduce((sum, t) => sum + t.total, 0);
         setTotalPemasukkan(totalToday);
         setTotalTransaksi(todayTransaksi.length);
-
+  
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split("T")[0];
         const yesterdayTransaksi = transaksiLunas.filter((t) =>
           t.tanggal_transaksi.startsWith(yesterdayStr)
         );
-
+  
         const totalYesterday = yesterdayTransaksi.reduce(
           (sum, t) => sum + t.total,
           0
@@ -64,6 +64,8 @@ export default function Dashboard({ setActiveLayout }) {
         );
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false); // Setelah data selesai dimuat, loading menjadi false
       }
     };
     fetchData();
@@ -93,55 +95,29 @@ export default function Dashboard({ setActiveLayout }) {
         <div className="flex flex-col justify-center rounded-lg shadow-lg p-4 bg-white">
           <P className="text-gray-300">Total Semua Pemasukkan</P>
           <H2 className="text-green-800">
-            Rp {totalAllPemasukkan.toLocaleString("id-ID")}
+            {loading
+              ? "Loading data..."
+              : `Rp ${totalAllPemasukkan.toLocaleString("id-ID")}`}
           </H2>
         </div>
 
         <div className="flex flex-col justify-center rounded-lg shadow-lg p-4 bg-white">
           <P className="text-gray-300">Total Item Terjual</P>
-          <H2>{totalItemTerjual} Item</H2>
+          <H2>{loading ? "Loading data..." : `${totalItemTerjual} Item`}</H2>
         </div>
 
         <div className="flex flex-col justify-center rounded-lg shadow-lg p-4 bg-white">
           <P className="text-gray-300">Total Pemasukkan Hari Ini</P>
           <H2 className="text-green-800">
-            Rp {totalPemasukkan.toLocaleString("id-ID")}
+            {loading
+              ? "Loading data..."
+              : `Rp ${totalPemasukkan.toLocaleString("id-ID")}`}
           </H2>
-          {percentageChange !== 0 && (
-            <span
-              className={`text-sm ${
-                percentageChange > 0 ? "text-green-600" : "text-red-600"
-              } mt-2 flex items-center`}
-            >
-              {percentageChange.toFixed(2)}%{" "}
-              {percentageChange > 0 ? (
-                <TrendingUp size={16} />
-              ) : (
-                <TrendingDown size={16} />
-              )}
-            </span>
-          )}
         </div>
 
         <div className="flex flex-col justify-center rounded-lg shadow-lg p-4 bg-white">
           <P className="text-gray-300">Total Transaksi Hari Ini</P>
-          <H2>{totalTransaksi} Transaksi</H2>
-          {percentageTransaksiChange !== 0 && (
-            <span
-              className={`text-sm ${
-                percentageTransaksiChange > 0
-                  ? "text-green-600"
-                  : "text-red-600"
-              } mt-2 flex items-center`}
-            >
-              {percentageTransaksiChange.toFixed(2)}%{" "}
-              {percentageTransaksiChange > 0 ? (
-                <TrendingUp size={16} />
-              ) : (
-                <TrendingDown size={16} />
-              )}
-            </span>
-          )}
+          <H2>{loading ? "Loading data..." : `${totalTransaksi} Transaksi`}</H2>
         </div>
       </div>
 
