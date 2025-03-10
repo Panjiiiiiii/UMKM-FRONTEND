@@ -22,7 +22,7 @@ const ProtectedRoutes = ({ children, expectedRole }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <P className='text-gray-400'>Loading....</P>
+        <P className='text-gray-400'>Loading...</P>
       </div>
     ); // Show loading state while checking
   }
