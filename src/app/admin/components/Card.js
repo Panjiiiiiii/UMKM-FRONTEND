@@ -38,7 +38,7 @@ export default function Card({
         <div className="flex flex-col gap-2 mt-4">
           <H3 className="text-xl">{name}</H3>
           <P className="text-sm text-gray-400">Stock: {stock}</P>
-          <P className="text-xl font-bold">Rp. {price}</P>
+          <P className="text-xl font-bold">Rp. {price.toLocaleString()}</P>
         </div>
         <div className="flex flex-row justify-start gap-4 mt-4">
           <Button

@@ -13,7 +13,7 @@ export default function Card({ image, name, sold, price }) {
       </div>
       <div className="flex flex-col gap-2 mt-4">
         <H3 className="text-lg sm:text-xl">{name}</H3>
-        <P className="text-lg sm:text-xl font-bold">Rp {price}</P>
+        <P className="text-lg sm:text-xl font-bold">Rp {price.toLocaleString()}</P>
         <P className="text-sm text-gray-400">Total terjual: {sold}</P>
       </div>
     </div>
