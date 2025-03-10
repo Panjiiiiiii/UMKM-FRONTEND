@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/atoms/Button";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
 import Kategori from "./layout/kategori";
+import ProtectedRoutes from "@/auth/ProtectRoutes";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,13 +20,30 @@ export default function Page() {
   const renderLayout = () => {
     switch (activeLayout) {
       case "dashboard":
-        return <Dashboard setActiveLayout={setActiveLayout} setEditProduct={setEditProduct}/>;
+        return (
+          <Dashboard
+            setActiveLayout={setActiveLayout}
+            setEditProduct={setEditProduct}
+          />
+        );
       case "produk":
-        return <Produk setActiveLayout={setActiveLayout}  editProduct={editProduct} setEditProduct={setEditProduct}/>;
+        return (
+          <Produk
+            setActiveLayout={setActiveLayout}
+            editProduct={editProduct}
+            setEditProduct={setEditProduct}
+          />
+        );
       case "user":
         return <User setActiveLayout={setActiveLayout} />;
       case "kategori":
-        return <Kategori setActiveLayout={setActiveLayout} editCategory={editCategory} setEditCategory={setEditCategory}/>;
+        return (
+          <Kategori
+            setActiveLayout={setActiveLayout}
+            editCategory={editCategory}
+            setEditCategory={setEditCategory}
+          />
+        );
       default:
         return <Dashboard setActiveLayout={setActiveLayout} />;
     }
@@ -33,26 +51,28 @@ export default function Page() {
 
   return (
     <div className="w-screen h-screen overflow-x-hidden p-4">
-      <Toaster position="top-right"/>
-      <header className="fixed p-8 z-50">
-        <Button
-          icon={<GiHamburgerMenu />}
-          variant="primary"
-          className="rounded-md p-4"
-          onClick={() => setIsOpen(true)}
-        />
-      </header>
+      <ProtectedRoutes expectedRole={"ADMIN"}>
+        <Toaster position="top-right" />
+        <header className="fixed p-8 z-50">
+          <Button
+            icon={<GiHamburgerMenu />}
+            variant="primary"
+            className="rounded-md p-4"
+            onClick={() => setIsOpen(true)}
+          />
+        </header>
 
-      {isOpen && (
-        <SidebarOverlay
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          setActiveLayout={setActiveLayout}
-          activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
-        />
-      )}
+        {isOpen && (
+          <SidebarOverlay
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            setActiveLayout={setActiveLayout}
+            activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
+          />
+        )}
 
-      <main className="mt-20">{renderLayout()}</main>
+        <main className="mt-20">{renderLayout()}</main>
+      </ProtectedRoutes>
     </div>
   );
 }

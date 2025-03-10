@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/atoms/Button";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
 import SidebarOverlay from "./components/navbar";
+import ProtectedRoutes from "@/auth/ProtectRoutes";
 
 export default function Page({}) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,36 +15,49 @@ export default function Page({}) {
   const renderLayout = () => {
     switch (activeLayout) {
       case "dashboard":
-        return <Dashboard setActiveLayout={setActiveLayout} setEditBahan={setEditBahan}/>;
+        return (
+          <Dashboard
+            setActiveLayout={setActiveLayout}
+            setEditBahan={setEditBahan}
+          />
+        );
       case "bahan":
-        return <Bahan editBahan={editBahan} setActiveLayout={setActiveLayout} setEditBahan={setEditBahan}/>;
+        return (
+          <Bahan
+            editBahan={editBahan}
+            setActiveLayout={setActiveLayout}
+            setEditBahan={setEditBahan}
+          />
+        );
       default:
-        return <Dashboard setActiveLayout={setActiveLayout}/>;
+        return <Dashboard setActiveLayout={setActiveLayout} />;
     }
   };
   return (
     <>
       <div className="w-screen h-screen overflow-x-hidden">
-        <Toaster position="top-right" />
-        <header className="fixed p-8 z-50">
-          <Button
-            icon={<GiHamburgerMenu />}
-            variant="primary"
-            className="rounded-md p-4"
-            onClick={() => setIsOpen(true)}
-          />
-        </header>
+        <ProtectedRoutes expectedRole={"PRODUCTION"}>
+          <Toaster position="top-right" />
+          <header className="fixed p-8 z-50">
+            <Button
+              icon={<GiHamburgerMenu />}
+              variant="primary"
+              className="rounded-md p-4"
+              onClick={() => setIsOpen(true)}
+            />
+          </header>
 
-        {isOpen && (
-          <SidebarOverlay
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setActiveLayout={setActiveLayout}
-            activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
-          />
-        )}
+          {isOpen && (
+            <SidebarOverlay
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              setActiveLayout={setActiveLayout}
+              activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
+            />
+          )}
 
-        <main className="mt-20">{renderLayout()}</main>
+          <main className="mt-20">{renderLayout()}</main>
+        </ProtectedRoutes>
       </div>
     </>
   );

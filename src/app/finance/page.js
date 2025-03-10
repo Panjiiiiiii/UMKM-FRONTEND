@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/atoms/Button";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
 import SidebarOverlay from "./components/navbar";
+import ProtectedRoutes from "@/auth/ProtectRoutes";
 
 export default function financePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,26 +30,28 @@ export default function financePage() {
   return (
     <>
       <div className="w-screen h-screen overflow-x-hidden">
-        <Toaster position="top-right" />
-        <header className="fixed p-8 z-50">
-          <Button
-            icon={<GiHamburgerMenu />}
-            variant="primary"
-            className="rounded-md p-4"
-            onClick={() => setIsOpen(true)}
-          />
-        </header>
+        <ProtectedRoutes expectedRole={"FINANCE"}>
+          <Toaster position="top-right" />
+          <header className="fixed p-8 z-50">
+            <Button
+              icon={<GiHamburgerMenu />}
+              variant="primary"
+              className="rounded-md p-4"
+              onClick={() => setIsOpen(true)}
+            />
+          </header>
 
-        {isOpen && (
-          <SidebarOverlay
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            setActiveLayout={setActiveLayout}
-            activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
-          />
-        )}
+          {isOpen && (
+            <SidebarOverlay
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              setActiveLayout={setActiveLayout}
+              activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
+            />
+          )}
 
-        <main className="mt-20">{renderLayout()}</main>
+          <main className="mt-20">{renderLayout()}</main>
+        </ProtectedRoutes>
       </div>
     </>
   );
