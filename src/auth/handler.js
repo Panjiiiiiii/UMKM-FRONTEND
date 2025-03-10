@@ -21,7 +21,7 @@ export default async function login(username, password, router) {
     const { token, user } = data.data;
     const { role } = user;
     setCookie("token", token);
-
+    setCookie("role", role);    
     if (role === "ADMIN") {
       router.push("/admin");
     } else if (role === "PRODUCTION") {
