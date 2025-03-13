@@ -7,6 +7,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
 import SidebarOverlay from "./components/navbar";
 import ProtectedRoutes from "@/auth/ProtectRoutes";
+import Inventori from "./layout/inventori";
 
 export default function Page({}) {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,12 @@ export default function Page({}) {
             setEditBahan={setEditBahan}
           />
         );
+      case "inventori" : 
+      return (
+        <Inventori
+          setActiveLayout={setActiveLayout}
+        />
+      )
       default:
         return <Dashboard setActiveLayout={setActiveLayout} />;
     }

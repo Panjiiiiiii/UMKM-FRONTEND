@@ -66,6 +66,20 @@ export default function SidebarOverlay({
               >
                 Bahan
               </Button>
+              <Button
+                variant="ghost"
+                className={`w-full ${
+                  activeLayout === "inventori"
+                    ? "bg-green-800 text-white"
+                    : "text-green-800 bg-transparent hover:bg-green-100"
+                }`}
+                onClick={() => {
+                  setActiveLayout("inventori");
+                  setIsOpen(false);
+                }}
+              >
+                Histori Inventory
+              </Button>
             </nav>
             <div className="mt-auto p-4">
               <Button

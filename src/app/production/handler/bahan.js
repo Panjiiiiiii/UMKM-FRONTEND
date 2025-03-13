@@ -17,6 +17,21 @@ export async function getBahan() {
   }
 }
 
+export async function getInventory() {
+  try {
+    const response = await axios.get(`${BASE_URL}/bahan/inventory/`, {
+      headers : {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+
 export async function selectBahan(id) {
   try {
     const response = await axios.get(`${BASE_URL}/bahan/${id}`, {
@@ -50,6 +65,21 @@ export async function updateBahan(id, value) {
   try {
     console.log(id, value);
     const response = await axios.put(`${BASE_URL}/bahan/${id}`, value, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function addInventory(id, value) {
+  try {
+    console.log(id, value);
+    const response = await axios.put(`${BASE_URL}/bahan/inventory/${id}`, value, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
