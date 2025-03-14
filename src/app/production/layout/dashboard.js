@@ -5,15 +5,19 @@ import { useEffect, useState } from "react";
 import { H2, P } from "@/components/ui/atoms/Text";
 import { Input } from "@/components/ui/atoms/Input";
 import { deleteBahan, getBahan, selectBahan } from "../handler/bahan";
-import { Edit, Trash } from "lucide-react";
+import { Box, Edit, Trash } from "lucide-react";
 import Pagination from "@/components/ui/molecules/Pagination";
 import toast from "react-hot-toast";
+import Inventory from "../components/inventory";
 
 export default function Dashboard({ setActiveLayout, setEditBahan }) {
   const [bahan, setBahan] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 🔄 Loader state
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedBahan, setSelectedBahan] = useState(null);
+
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -31,6 +35,10 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log("State isOpen berubah:", isOpen);
+  }, [isOpen]);
 
   const handleEdit = async (id_bahan) => {
     const bahanData = await selectBahan(id_bahan);
@@ -157,6 +165,16 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
                   </td>
                   <td className="p-4 flex flex-row gap-4 justify-center">
                     <Button
+                      variant="outline"
+                      icon={<Box />}
+                      onClick={() => {
+                        console.log("Sebelum setIsOpen:", isOpen); // Cek sebelum berubah
+                        setSelectedBahan(item.id_bahan);
+                        setIsOpen(true);
+                        console.log("Sesudah setIsOpen:", isOpen);
+                      }}
+                    />
+                    <Button
                       variant="edit"
                       icon={<Edit />}
                       onClick={() => handleEdit(item.id_bahan)}
@@ -173,6 +191,14 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
           </tbody>
         </table>
       </div>
+      {isOpen && (
+        <Inventory
+          key={selectedBahan}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          idBahan={selectedBahan}
+        />
+      )}
 
       {/* ⏩ Pagination */}
       {!isLoading && totalItems > 0 && (
@@ -183,6 +209,9 @@ export default function Dashboard({ setActiveLayout, setEditBahan }) {
           onPageChange={handlePageChange}
         />
       )}
+
+      {/* 🔄 Loading Inventory */}
+
     </div>
   );
 }

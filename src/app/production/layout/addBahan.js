@@ -65,30 +65,38 @@ export default function Bahan({ setActiveLayout, editBahan, setEditBahan }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!bahan.nama || !bahan.stok || !bahan.satuan || !bahan.produk_Bahan.length) {
+
+    if (
+      !bahan.nama ||
+      !bahan.stok ||
+      !bahan.satuan ||
+      !bahan.produk_Bahan.length
+    ) {
       toast.error("Harap lengkapi semua data sebelum mengirim.");
       return;
     }
-  
-    const action = editBahan && editBahan.id_bahan 
-      ? updateBahan(editBahan.id_bahan, bahan) 
-      : addBahan(bahan);
-  
+
+    const action =
+      editBahan && editBahan.id_bahan
+        ? updateBahan(editBahan.id_bahan, bahan)
+        : addBahan(bahan);
+
     toast.promise(action, {
       loading: editBahan ? "Memperbarui bahan..." : "Menambahkan bahan...",
-      success: editBahan ? "Bahan berhasil diperbarui!" : "Bahan berhasil ditambahkan!",
+      success: editBahan
+        ? "Bahan berhasil diperbarui!"
+        : "Bahan berhasil ditambahkan!",
       error: "Terjadi kesalahan saat mengirim data.",
     });
-  
+
     try {
       await action;
-  
+
       // Reset form setelah submit
       setBahan({ nama: "", stok: 0, satuan: "", produk_Bahan: [] });
       setEditBahan(null);
       setActiveLayout("dashboard");
-  
+
       // Refresh data bahan
       const updatedBahan = await getBahan();
       setBahan(updatedBahan);
@@ -96,7 +104,6 @@ export default function Bahan({ setActiveLayout, editBahan, setEditBahan }) {
       console.error("Error:", error);
     }
   };
-  
 
   return (
     <div className="flex flex-col w-full h-full p-8">
@@ -125,16 +132,18 @@ export default function Bahan({ setActiveLayout, editBahan, setEditBahan }) {
             onChange={(e) => setBahan({ ...bahan, satuan: e.target.value })}
           />
         </div>
-        <div className="flex flex-row justify-between mb-8">
-          <H4>Stok</H4>
-          <Input
-            type="number"
-            value={bahan.stok}
-            onChange={(e) =>
-              setBahan({ ...bahan, stok: Number(e.target.value) })
-            }
-          />
-        </div>
+        {!editBahan && (
+          <div className="flex flex-row justify-between mb-8">
+            <H4>Stok</H4>
+            <Input
+              type="number"
+              value={bahan.stok}
+              onChange={(e) =>
+                setBahan({ ...bahan, stok: Number(e.target.value) })
+              }
+            />
+          </div>
+        )}
         <div className="flex flex-col gap-8 justify-between">
           <H4>Produk yang menggunakan bahan</H4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

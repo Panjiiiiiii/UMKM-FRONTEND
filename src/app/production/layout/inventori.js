@@ -67,7 +67,7 @@ export default function Inventori({ setActiveLayout }) {
   return (
     <>
       <div className="flex flex-col w-full h-full p-8">
-        <H2 className="mb-4">Histori Pembelian</H2>
+        <H2 className="mb-4">Histori Inventori</H2>
         <div className="flex flex-row justify-between items-center gap-12 mb-8">
           {/* Input Search */}
           <Input
