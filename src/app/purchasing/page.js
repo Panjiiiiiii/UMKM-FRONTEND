@@ -8,6 +8,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { Toaster } from "react-hot-toast";
 import History from "./layout/history";
 import ProtectedRoutes from "@/auth/ProtectRoutes";
+import Navbar from "./components/navbar";
 
 export default function purchasingPage({}) {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,6 @@ export default function purchasingPage({}) {
         return <Dashboard setActiveLayout={setActiveLayout} />;
       case "histori":
         return <History setActiveLayout={setActiveLayout} />;
-      case "keranjang":
-        return;
       default:
         return <Dashboard setActiveLayout={setActiveLayout} />;
     }
@@ -30,7 +29,7 @@ export default function purchasingPage({}) {
       <div className="w-screen h-screen overflow-x-hidden">
         <ProtectedRoutes expectedRole={"PURCHASING"}>
           <Toaster position="top-right" />
-          <header className="fixed p-8 z-50">
+          {/* <header className="fixed p-8 z-50">
             <Button
               icon={<GiHamburgerMenu />}
               variant="primary"
@@ -45,8 +44,14 @@ export default function purchasingPage({}) {
               setActiveLayout={setActiveLayout}
               activeLayout={activeLayout} // Kirim activeLayout ke Sidebar
             />
-          )}
-          <main className="mt-20">{renderLayout()}</main>
+          )} */}
+          <header>
+            <Navbar
+              activeLayout={activeLayout}
+              setActiveLayout={setActiveLayout}
+            />
+          </header>
+          <main>{renderLayout()}</main>
         </ProtectedRoutes>
       </div>
     </>
