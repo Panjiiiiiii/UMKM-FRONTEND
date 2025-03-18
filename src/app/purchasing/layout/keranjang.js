@@ -103,7 +103,7 @@ export default function Keranjang({ setActiveLayout }) {
   return (
     <div className="relative w-full overflow-hidden p-16">
       <H1>Keranjang</H1>
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center gap-8 mt-8">
         <div className="flex flex-col overflow-y-auto">
           {filteredItems.map((item) => (
             <div
@@ -131,19 +131,23 @@ export default function Keranjang({ setActiveLayout }) {
             </div>
           ))}
         </div>
-        <div className="flex justify-between mt-4">
-          <Button
-            icon={<Printer />}
-            variant="edit"
-            children={`Print`}
-            onClick={handlerPrint}
-          />
-          <Button
-            icon={<ShoppingCart />}
-            variant="outline"
-            children={`Checkout`}
-            onClick={() => setShowUserModal(true)}
-          />
+        <div className="max-w-sm h-max rounded-md border-4 border-gray-200 p-4 space-y-8">
+            <H2>Total Harga</H2>
+            <P className="text-sm">Rp {totalHarga.toLocaleString()}</P>
+          <div className="flex justify-center gap-4">
+            <Button
+              icon={<Printer />}
+              variant="edit"
+              children={`Print`}
+              onClick={handlerPrint}
+            />
+            <Button
+              icon={<ShoppingCart />}
+              variant="outline"
+              children={`Checkout`}
+              onClick={() => setShowUserModal(true)}
+            />
+          </div>
         </div>
       </div>
       {showUserModal && (
