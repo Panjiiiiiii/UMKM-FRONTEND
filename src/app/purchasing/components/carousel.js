@@ -2,38 +2,59 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function Carousel  ({ images, interval = 3000 })  {
+export default function Carousel({ images, interval = 3000 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState("right"); // Tambahkan state untuk arah slide
 
   useEffect(() => {
     const timer = setInterval(() => {
+      setDirection("right"); // Set arah ke kanan saat otomatis
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, interval);
     return () => clearInterval(timer);
   }, [images.length, interval]);
 
   const prevSlide = () => {
+    setDirection("left"); // Set arah ke kiri saat prevSlide
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
 
   const nextSlide = () => {
+    setDirection("right"); // Set arah ke kanan saat nextSlide
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const variants = {
+    enter: (direction) => ({
+      x: direction === "right" ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction) => ({
+      x: direction === "right" ? "-100%" : "100%",
+      opacity: 0,
+    }),
   };
 
   return (
     <div className="relative w-full h-[500px] overflow-hidden">
-      <AnimatePresence>
+      <AnimatePresence custom={direction} initial={false}>
         <motion.img
           key={images[currentIndex]}
           src={images[currentIndex]}
           alt={`Slide ${currentIndex}`}
-          className="w-full h-full object-cover absolute"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
+          className="w-full h-full object-cover absolute rounded-xl"
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.8, ease: "easeInOut" }}
         />
       </AnimatePresence>
 
@@ -59,11 +80,13 @@ export default function Carousel  ({ images, interval = 3000 })  {
             className={`w-3 h-3 rounded-full transition-all ${
               index === currentIndex ? "bg-white scale-125" : "bg-gray-500"
             }`}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              setDirection(index > currentIndex ? "right" : "left"); // Set arah berdasarkan indeks
+              setCurrentIndex(index);
+            }}
           />
         ))}
       </div>
     </div>
   );
-};
-
+}

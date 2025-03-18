@@ -53,14 +53,14 @@ export const MenuCard = ({ id_produk, image, name, stock, price }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 w-full max-w-[442px] h-[600px] flex flex-col border-4 border-green-800">
+    <div className="bg-white rounded-xl shadow-md p-4 w-200 max-w-md h-[360px] flex flex-col space-y-4">
       {/* Gambar Menu */}
       <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
         <img src={image} alt={name} className="w-full h-full object-cover rounded-md" />
       </div>
 
       {/* Informasi Menu */}
-      <div className="mt-8 flex-1">
+      <div className="flex-1">
         <H3 className="font-semibold text-gray-900">{name}</H3>
         <P className="text-gray-500">
           {currentStock > 0 ? `Stok: ${currentStock}` : "Habis"}
@@ -71,7 +71,7 @@ export const MenuCard = ({ id_produk, image, name, stock, price }) => {
       </div>
 
       {/* Tombol Change Quantity */}
-      <div className="mt-auto flex justify-start">
+      <div className="flex justify-start">
         <ChangeQuantity value={quantity} onChange={handleQuantityChange} />
       </div>
     </div>
