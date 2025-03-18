@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import History from "./layout/history";
 import ProtectedRoutes from "@/auth/ProtectRoutes";
 import Navbar from "./components/navbar";
+import Keranjang from "./layout/keranjang";
 
 export default function purchasingPage({}) {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,8 @@ export default function purchasingPage({}) {
         return <Dashboard setActiveLayout={setActiveLayout} />;
       case "histori":
         return <History setActiveLayout={setActiveLayout} />;
+      case "keranjang":
+        return <Keranjang setActiveLayout={setActiveLayout} />;
       default:
         return <Dashboard setActiveLayout={setActiveLayout} />;
     }
