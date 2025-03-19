@@ -62,17 +62,37 @@ export default function Keranjang({ setActiveLayout }) {
         })),
       };
 
-      await toast.promise(createTransaksi(payload), {
-        loading: "Memproses transaksi...",
-        success: "Transaksi berhasil!",
-        error: "Gagal melakukan transaksi.",
+      const response = await createTransaksi(payload);
+      if (!response) {
+        toast.error("Gagal melakukan transaksi.");
+        return;
+      }
+
+      const { snapToken } = response.data;
+      window.snap.pay(snapToken, {
+        onSuccess: () => {
+          toast.success("Pembayaran berhasil!");
+          window.location.reload();
+        },
+        onPending: () => {
+          toast.info("Menunggu pembayaran...");
+        },
+        onError: () => {
+          toast.error("Pembayaran gagal!");
+        },
       });
 
-      localStorage.removeItem("cart");
-      window.dispatchEvent(new Event("cartUpdated"));
-      window.location.reload();
+      // await toast.promise(createTransaksi(payload), {
+      //   loading: "Memproses transaksi...",
+      //   success: "Transaksi berhasil!",
+      //   error: "Gagal melakukan transaksi.",
+      // });
 
-      setShowUserModal(false);
+      // localStorage.removeItem("cart");
+      // window.dispatchEvent(new Event("cartUpdated"));
+      // window.location.reload();
+
+      // setShowUserModal(false);
     } catch (error) {
       console.error(error);
     }
@@ -132,8 +152,8 @@ export default function Keranjang({ setActiveLayout }) {
           ))}
         </div>
         <div className="max-w-sm h-max rounded-md border-4 border-gray-200 p-4 space-y-8">
-            <H2>Total Harga</H2>
-            <P className="text-sm">Rp {totalHarga.toLocaleString()}</P>
+          <H2>Total Harga</H2>
+          <P className="text-sm">Rp {totalHarga.toLocaleString()}</P>
           <div className="flex justify-center gap-4">
             <Button
               icon={<Printer />}
