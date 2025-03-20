@@ -1,6 +1,6 @@
 "use client";
 
-import { X, User, ChevronDown } from "lucide-react";
+import { X, User, ChevronDown, User2 } from "lucide-react";
 import { Button } from "@/components/ui/atoms/Button";
 import { useState } from "react";
 import { removeCookie } from "@/utils/cookies";
@@ -31,7 +31,11 @@ export default function Navbar({
         <div className="flex flex-row justify-end space-x-8 pr-[60px]">
           {/* Perbaikan: Gunakan arrow function di dalam onClick */}
           <button onClick={() => setActiveLayout("dashboard")}>
-            <P className={`text-white ${activeLayout === "dashboard" ? "font-bold" : ""}`}>
+            <P
+              className={`text-white ${
+                activeLayout === "dashboard" ? "font-bold" : ""
+              }`}
+            >
               Home
             </P>
           </button>
@@ -40,14 +44,25 @@ export default function Navbar({
             <ChevronDown className="text-white" />
           </div>
           <button onClick={() => setActiveLayout("keranjang")}>
-            <P className={`text-white ${activeLayout === "keranjang" ? "font-bold" : ""}`}>
+            <P
+              className={`text-white ${
+                activeLayout === "keranjang" ? "font-bold" : ""
+              }`}
+            >
               Keranjang
             </P>
           </button>
           <button onClick={() => setActiveLayout("histori")}>
-            <P className={`text-white ${activeLayout === "histori" ? "font-bold" : ""}`}>
+            <P
+              className={`text-white ${
+                activeLayout === "histori" ? "font-bold" : ""
+              }`}
+            >
               Histori
             </P>
+          </button>
+          <button onClick={() => setShowLogoutModal(true)}>
+            <P className={`text-white`}>Logout</P>
           </button>
         </div>
       </div>
