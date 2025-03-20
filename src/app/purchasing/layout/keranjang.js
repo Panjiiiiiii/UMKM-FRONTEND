@@ -69,17 +69,23 @@ export default function Keranjang({ setActiveLayout }) {
           qty: item.qty,
         })),
       };
-
+  
       const response = await createTransaksi(payload);
       if (!response) {
         toast.error("Gagal melakukan transaksi.");
         return;
       }
-
+  
       const { snapToken } = response.data;
       window.snap.pay(snapToken, {
         onSuccess: () => {
           toast.success("Pembayaran berhasil!");
+  
+          // Hapus keranjang setelah sukses
+          localStorage.removeItem("cart");
+          setCartItems({});
+          window.dispatchEvent(new Event("cartUpdated"));
+  
           window.location.reload();
         },
         onPending: () => {
@@ -89,22 +95,11 @@ export default function Keranjang({ setActiveLayout }) {
           toast.error("Pembayaran gagal!");
         },
       });
-
-      // await toast.promise(createTransaksi(payload), {
-      //   loading: "Memproses transaksi...",
-      //   success: "Transaksi berhasil!",
-      //   error: "Gagal melakukan transaksi.",
-      // });
-
-      // localStorage.removeItem("cart");
-      // window.dispatchEvent(new Event("cartUpdated"));
-      // window.location.reload();
-
-      // setShowUserModal(false);
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const handleQuantityChange = (id_produk, newQuantity) => {
     if (newQuantity < 0) return; // Cegah qty negatif
