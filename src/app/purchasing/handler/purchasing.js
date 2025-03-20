@@ -13,6 +13,16 @@ export async function getProduk() {
   }
 }
 
+export async function getProdukByCategory(id) {
+  try {
+    const response = await axios.get(`${BASE_URL}/category/${id}`, {});
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export async function getTransaksi() {
   try {
     const response = await axios.get(`${BASE_URL}/transaksi/`, {

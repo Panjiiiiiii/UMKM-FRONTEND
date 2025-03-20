@@ -40,8 +40,15 @@ export default function Navbar({
             </P>
           </button>
           <div className="flex items-center gap-1">
-            <P className="text-white">Produk</P>
-            <ChevronDown className="text-white" />
+            <button onClick={() => setActiveLayout("produk")}>
+              <P
+                className={`text-white ${
+                  activeLayout === "produk" ? "font-bold" : ""
+                }`}
+              >
+                Produk
+              </P>
+            </button>
           </div>
           <button onClick={() => setActiveLayout("keranjang")}>
             <P
