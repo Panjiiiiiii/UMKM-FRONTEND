@@ -9,6 +9,7 @@ import UserModal from "../components/DataUser";
 import toast from "react-hot-toast";
 import { Printer, ShoppingCart } from "lucide-react";
 import { setLocalStorage, getLocalStorage } from "@/utils/localstorage";
+import { CLIENT_KEY } from "@/schema/secret";
 
 export default function Keranjang({ setActiveLayout }) {
   const [cartItems, setCartItems] = useState({});
@@ -35,6 +36,13 @@ export default function Keranjang({ setActiveLayout }) {
     window.addEventListener("cartUpdated", updateCart);
     return () => window.removeEventListener("cartUpdated", updateCart);
   }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute("data-client-key", CLIENT_KEY);
+    document.body.appendChild(script);
+  },[])
 
   const filteredItems = produkList
     .filter((produk) => cartItems[produk.id_produk])
