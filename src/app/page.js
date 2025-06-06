@@ -22,7 +22,13 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-[#3B694E]">
+    <div className="h-screen"
+      style={{
+        backgroundImage: "url('/cookies-bg.svg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}>
       <Toaster />
       <Modal title={isForgotPassword ? "Forgot Password" : "Login User"} isOpen={true} hideClose>
         {isForgotPassword ? (

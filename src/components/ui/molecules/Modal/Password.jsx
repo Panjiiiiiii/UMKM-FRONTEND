@@ -101,7 +101,7 @@ export const PasswordForm = ({ onSubmit }) => {
       </Button>
       <div className="mt-4">
         <span
-          className="text-blue-500 cursor-pointer mt-4"
+          className="text-green-600 cursor-pointer mt- underline"
           onClick={() =>( window.location.href = "/")}
         >
           Back to login?
